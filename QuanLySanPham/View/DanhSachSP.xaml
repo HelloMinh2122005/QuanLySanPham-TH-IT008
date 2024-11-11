@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuanLySanPham.View.DanhSachSP"
+             Title="Danh sách sản phẩm"
+             xmlns:viewmodel="clr-namespace:QuanLySanPham.ViewModel"
+             x:DataType="viewmodel:DanhSachSPViewModel"
+             xmlns:model="clr-namespace:QuanLySanPham.Model">
+    
+    <Grid HeightRequest="550"
+          WidthRequest="1000"
+          RowSpacing="10"
+          RowDefinitions="Auto, 350, Auto, *, Auto">
+
+        <Grid ColumnDefinitions="30, 140, 300, 100, 60, *"
+              ColumnSpacing="40">
+            <Label Grid.Column="0" Text="STT" FontSize="Body" FontAttributes="Bold"/>
+            <Label Grid.Column="1" Text="Mã sản phẩm" FontAttributes="Bold"/>
+            <Label Grid.Column="2" Text="Tên sản phẩm" FontAttributes="Bold"/>
+            <Label Grid.Column="3" Text="Đơn giá" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Label Grid.Column="4" Text="Số lượng" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Label Grid.Column="5" Text="Thành tiền" FontAttributes="Bold" HorizontalOptions="Center"/>
+        </Grid>
+
+        <CollectionView Grid.Row="1"
+                        SelectionMode="Single"
+                        SelectionChangedCommand="{Binding SelectCommand}"
+                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}"
+                        ItemsSource="{Binding DsSanPham}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="30, 140, 300, 100, 60, *"
+                          ColumnSpacing="40"
+                          x:DataType="model:SanPham">
+                        <Label Grid.Column="0" x:DataType="viewmodel:DanhSachSPViewModel" Text="tmp" />
+                        <Label Grid.Column="1" Text="{Binding MaSanPham}"/>
+                        <Label Grid.Column="2" Text="{Binding Ten}" />
+                        <Label Grid.Column="3" Text="{Binding GiaTien}" HorizontalOptions="Center"/>
+                        <Label Grid.Column="4" Text="{Binding SoLuong}" HorizontalOptions="Center"/>
+                        <Label Grid.Column="5" Text="{Binding TongTien}" HorizontalOptions="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Grid Grid.Row="2"
+              ColumnDefinitions="200, *">
+            <Label Text="Thành tiền: " FontAttributes="Bold" FontSize="20"/>
+            <Label Grid.Column="1" Text="{Binding ThanhTien}" FontSize="20"/>
+        </Grid>
+        
+        <Grid Grid.Row="3"
+              HeightRequest="50"
+              WidthRequest="1000"
+              ColumnDefinitions="*, Auto, Auto, Auto, *"
+              ColumnSpacing="30">
+
+            <Button Text="Thêm"
+                    Command="{Binding AddCommand}"
+                    Grid.Column="1"
+                    BackgroundColor="Green"
+                    HorizontalOptions="Center"/>
+            <Button Text="Xóa"
+                    Command="{Binding DelCommand}"
+                    Grid.Column="2"
+                    BackgroundColor="Red"
+                    HorizontalOptions="Center"/>
+            <Button Text="Sửa"
+                    Command="{Binding EditCommand}"
+                    Grid.Column="3"
+                    BackgroundColor="Blue"
+                    HorizontalOptions="Center"/>
+        </Grid>
+
+        <Button Grid.Row="4"
+                BackgroundColor="LightGray"
+                Text="Xuất PDF"
+                WidthRequest="100"
+                Command="{Binding ExportCommand}"/>
+    </Grid>
+</ContentPage>
