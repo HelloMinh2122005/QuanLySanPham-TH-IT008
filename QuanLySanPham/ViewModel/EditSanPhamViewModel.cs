@@ -18,24 +18,24 @@ public partial class EditSanPhamViewModel : ObservableObject
     [RelayCommand]
     async Task Save()
     {
-        if (sanpham.Ten == "")
+        if (Sanpham.Ten == "")
         {
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng tên sản phẩm", "OK");
             return;
         }
-        if (sanpham.GiaTien == 0)
+        if (Sanpham.GiaTien == 0)
         {
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng nhập đơn giá sản phẩm", "OK");
             return;
         }
-        if (sanpham.SoLuong == 0)
+        if (Sanpham.SoLuong == 0)
         {
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng số lượng sản phẩm", "OK");
             return;
         }
         await Shell.Current.GoToAsync($"..", new Dictionary<string, object>
         {
-            {"edit", sanpham}
+            {"edit", Sanpham}
         });
     }
 

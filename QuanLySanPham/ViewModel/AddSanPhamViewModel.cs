@@ -26,7 +26,7 @@ public partial class AddSanPhamViewModel : ObservableObject
     [RelayCommand]
     async Task Save()
     {
-        if (maSanPham == "")
+        if (MaSanPham == "")
         {
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng nhập mã sản phẩm", "OK");
             return;
