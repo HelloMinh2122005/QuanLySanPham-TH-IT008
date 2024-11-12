@@ -40,6 +40,88 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         thanhTien = 0;
         GiaTientmp = 0;
         selectedSanPham = new SanPham();
+
+        dsSanPham.Add(new SanPham
+        {
+            MaSanPham = "SP001",
+            Ten = "Bút chì",
+            GiaTien = 5000,
+            SoLuong = 10
+        });
+
+        dsSanPham.Add(new SanPham
+        {
+            MaSanPham = "SP002",
+            Ten = "Bút bi",
+            GiaTien = 7000,
+            SoLuong = 15
+        });
+
+        dsSanPham.Add(new SanPham
+        {
+            MaSanPham = "SP003",
+            Ten = "Thước kẻ",
+            GiaTien = 3000,
+            SoLuong = 20
+        });
+
+        dsSanPham.Add(new SanPham
+        {
+            MaSanPham = "SP004",
+            Ten = "Tẩy",
+            GiaTien = 2000,
+            SoLuong = 25
+        });
+
+        dsSanPham.Add(new SanPham
+        {
+            MaSanPham = "SP005",
+            Ten = "Sổ tay",
+            GiaTien = 15000,
+            SoLuong = 5
+        });
+
+        dsSanPham.Add(new SanPham
+        {
+            MaSanPham = "SP006",
+            Ten = "Bìa kẹp",
+            GiaTien = 12000,
+            SoLuong = 8
+        });
+
+        dsSanPham.Add(new SanPham
+        {
+            MaSanPham = "SP007",
+            Ten = "Kéo",
+            GiaTien = 10000,
+            SoLuong = 12
+        });
+
+        dsSanPham.Add(new SanPham
+        {
+            MaSanPham = "SP008",
+            Ten = "Bút lông",
+            GiaTien = 8000,
+            SoLuong = 18
+        });
+
+        dsSanPham.Add(new SanPham
+        {
+            MaSanPham = "SP009",
+            Ten = "Giấy A4",
+            GiaTien = 50000,
+            SoLuong = 2
+        });
+
+        dsSanPham.Add(new SanPham
+        {
+            MaSanPham = "SP010",
+            Ten = "Bút dạ quang",
+            GiaTien = 6000,
+            SoLuong = 10
+        });
+
+        ThanhTien = 860000;
     }
 
     void IQueryAttributable.ApplyQueryAttributes(System.Collections.Generic.IDictionary<string, object> query)
@@ -122,19 +204,19 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                 Worksheet worksheet = workbook.Worksheets[0];
 
                 // Set column widths for a cleaner layout
-                worksheet.Cells.SetColumnWidth(0, 25);
-                worksheet.Cells.SetColumnWidth(1, 30);
+                worksheet.Cells.SetColumnWidth(0, 20);
+                worksheet.Cells.SetColumnWidth(1, 20);
                 worksheet.Cells.SetColumnWidth(2, 12);
                 worksheet.Cells.SetColumnWidth(3, 12);
                 worksheet.Cells.SetColumnWidth(4, 15);
 
                 // Header information
-                worksheet.Cells[0, 0].PutValue("Tên người tạo:");
-                worksheet.Cells[0, 1].PutValue(finalRes.TenNguoiTao);
-                worksheet.Cells[1, 0].PutValue("Ngày tạo:");
-                worksheet.Cells[1, 1].PutValue(finalRes.NgayTao.ToString("dd/MM/yyyy"));
-                worksheet.Cells[2, 0].PutValue("Tổng giá trị hóa đơn:");
-                worksheet.Cells[2, 1].PutValue(finalRes.TongTien.ToString());
+                worksheet.Cells[0, 1].PutValue("Tên người tạo:");
+                worksheet.Cells[0, 2].PutValue(finalRes.TenNguoiTao);
+                worksheet.Cells[1, 1].PutValue("Ngày tạo:");
+                worksheet.Cells[1, 2].PutValue(finalRes.NgayTao.ToString("dd/MM/yyyy"));
+                worksheet.Cells[2, 1].PutValue("Tổng giá trị hóa đơn:");
+                worksheet.Cells[2, 2].PutValue(finalRes.TongTien.ToString());
 
                 // Table headers
                 worksheet.Cells[4, 0].PutValue("Mã sản phẩm");
