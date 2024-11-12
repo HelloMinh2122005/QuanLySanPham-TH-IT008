@@ -180,7 +180,11 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         GiaTientmp = selectedSanPham.TongTien;
     }
 
-
+    [RelayCommand]
+    public void Select(SanPham selectedSP)
+    {
+        selectedSanPham = selectedSP;
+    }
 
     [RelayCommand]
     public async Task Export()
@@ -204,11 +208,12 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                 Worksheet worksheet = workbook.Worksheets[0];
 
                 // Set column widths for a cleaner layout
-                worksheet.Cells.SetColumnWidth(0, 20);
+                worksheet.Cells.SetColumnWidth(0, 5);
                 worksheet.Cells.SetColumnWidth(1, 20);
-                worksheet.Cells.SetColumnWidth(2, 12);
+                worksheet.Cells.SetColumnWidth(2, 20);
                 worksheet.Cells.SetColumnWidth(3, 12);
-                worksheet.Cells.SetColumnWidth(4, 15);
+                worksheet.Cells.SetColumnWidth(4, 12);
+                worksheet.Cells.SetColumnWidth(5, 15);
 
                 // Header information
                 worksheet.Cells[0, 1].PutValue("Tên người tạo:");
@@ -219,21 +224,24 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                 worksheet.Cells[2, 2].PutValue(finalRes.TongTien.ToString());
 
                 // Table headers
-                worksheet.Cells[4, 0].PutValue("Mã sản phẩm");
-                worksheet.Cells[4, 1].PutValue("Tên sản phẩm");
-                worksheet.Cells[4, 2].PutValue("Số lượng");
-                worksheet.Cells[4, 3].PutValue("Giá tiền");
-                worksheet.Cells[4, 4].PutValue("Tổng tiền");
+                worksheet.Cells[4, 0].PutValue("STT");
+                worksheet.Cells[4, 1].PutValue("Mã sản phẩm");
+                worksheet.Cells[4, 2].PutValue("Tên sản phẩm");
+                worksheet.Cells[4, 3].PutValue("Số lượng");
+                worksheet.Cells[4, 4].PutValue("Giá tiền");
+                worksheet.Cells[4, 5].PutValue("Tổng tiền");
 
                 // Product details
                 int rowIndex = 5;
                 foreach (var sp in finalRes.DsSanPham)
                 {
-                    worksheet.Cells[rowIndex, 0].PutValue(sp.MaSanPham);
-                    worksheet.Cells[rowIndex, 1].PutValue(sp.Ten);
-                    worksheet.Cells[rowIndex, 2].PutValue(sp.SoLuong);
-                    worksheet.Cells[rowIndex, 3].PutValue(sp.GiaTien);
-                    worksheet.Cells[rowIndex, 4].PutValue(sp.TongTien);
+                    int valStt = rowIndex - 4;
+                    worksheet.Cells[rowIndex, 0].PutValue(valStt.ToString());
+                    worksheet.Cells[rowIndex, 1].PutValue(sp.MaSanPham);
+                    worksheet.Cells[rowIndex, 2].PutValue(sp.Ten);
+                    worksheet.Cells[rowIndex, 3].PutValue(sp.SoLuong.ToString());
+                    worksheet.Cells[rowIndex, 4].PutValue(sp.GiaTien.ToString());
+                    worksheet.Cells[rowIndex, 5].PutValue(sp.TongTien.ToString());
                     rowIndex++;
                 }
 
@@ -249,6 +257,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                 worksheet.Cells[4, 2].SetStyle(headerStyle);
                 worksheet.Cells[4, 3].SetStyle(headerStyle);
                 worksheet.Cells[4, 4].SetStyle(headerStyle);
+                worksheet.Cells[4, 5].SetStyle(headerStyle);
 
                 // Apply border style to the table
                 var borderStyle = workbook.CreateStyle();
@@ -259,7 +268,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
 
                 for (int i = 5; i < rowIndex; i++)
                 {
-                    for (int j = 0; j <= 4; j++)
+                    for (int j = 0; j <= 5; j++)
                     {
                         worksheet.Cells[i, j].SetStyle(borderStyle);
                     }
@@ -288,14 +297,5 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         {
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng chọn thư mục để lưu file", "OK");
         }
-    }
-
-
-
-
-    [RelayCommand]
-    public void Select(SanPham selectedSP)
-    {
-        selectedSanPham = selectedSP;
     }
 }

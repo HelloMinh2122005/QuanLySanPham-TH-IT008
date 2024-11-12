@@ -12,14 +12,13 @@
           RowSpacing="10"
           RowDefinitions="Auto, 350, Auto, *, Auto">
 
-        <Grid ColumnDefinitions="30, 140, 300, 100, 60, *"
+        <Grid ColumnDefinitions="140, 300, 100, 60, *"
               ColumnSpacing="40">
-            <Label Grid.Column="0" Text="STT" FontSize="Body" FontAttributes="Bold"/>
-            <Label Grid.Column="1" Text="Mã sản phẩm" FontAttributes="Bold"/>
-            <Label Grid.Column="2" Text="Tên sản phẩm" FontAttributes="Bold"/>
-            <Label Grid.Column="3" Text="Đơn giá" FontAttributes="Bold" HorizontalOptions="Center"/>
-            <Label Grid.Column="4" Text="Số lượng" FontAttributes="Bold" HorizontalOptions="Center"/>
-            <Label Grid.Column="5" Text="Thành tiền" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Label Grid.Column="0" Text="Mã sản phẩm" FontAttributes="Bold"/>
+            <Label Grid.Column="1" Text="Tên sản phẩm" FontAttributes="Bold"/>
+            <Label Grid.Column="2" Text="Đơn giá" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Label Grid.Column="3" Text="Số lượng" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Label Grid.Column="4" Text="Thành tiền" FontAttributes="Bold" HorizontalOptions="Center"/>
         </Grid>
 
         <CollectionView Grid.Row="1"
@@ -29,15 +28,14 @@
                         ItemsSource="{Binding DsSanPham}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid ColumnDefinitions="30, 140, 300, 100, 60, *"
+                    <Grid ColumnDefinitions="140, 300, 100, 60, *"
                           ColumnSpacing="40"
                           x:DataType="model:SanPham">
-                        <Label Grid.Column="0" x:DataType="viewmodel:DanhSachSPViewModel" Text="tmp" />
-                        <Label Grid.Column="1" Text="{Binding MaSanPham}"/>
-                        <Label Grid.Column="2" Text="{Binding Ten}" />
-                        <Label Grid.Column="3" Text="{Binding GiaTien}" HorizontalOptions="Center"/>
-                        <Label Grid.Column="4" Text="{Binding SoLuong}" HorizontalOptions="Center"/>
-                        <Label Grid.Column="5" Text="{Binding TongTien}" HorizontalOptions="Center"/>
+                        <Label Grid.Column="0" Text="{Binding MaSanPham}"/>
+                        <Label Grid.Column="1" Text="{Binding Ten}" />
+                        <Label Grid.Column="2" Text="{Binding GiaTien}" HorizontalOptions="Center"/>
+                        <Label Grid.Column="3" Text="{Binding SoLuong}" HorizontalOptions="Center"/>
+                        <Label Grid.Column="4" Text="{Binding TongTien}" HorizontalOptions="Center"/>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
@@ -74,6 +72,7 @@
 
         <Button Grid.Row="4"
                 BackgroundColor="LightGray"
+                TextColor="Black"
                 Text="Xuất PDF"
                 WidthRequest="100"
                 Command="{Binding ExportCommand}"/>
