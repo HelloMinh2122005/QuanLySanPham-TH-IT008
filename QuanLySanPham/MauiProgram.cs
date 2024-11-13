@@ -25,6 +25,9 @@ namespace QuanLySanPham
 #endif
             builder.Services.AddSingleton<SanPham>();
 
+            builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddSingleton<MainPageViewModel>();
+
             builder.Services.AddSingleton<DanhSachSP>();
             builder.Services.AddSingleton<DanhSachSPViewModel>();
 

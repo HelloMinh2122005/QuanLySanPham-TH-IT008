@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using QuanLySanPham.Model;
+using QuanLySanPham.View;
 
 namespace QuanLySanPham.ViewModel;
 

@@ -1,21 +1,29 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using QuanLySanPham.Model;
+using QuanLySanPham.View;
 
 namespace QuanLySanPham.ViewModel;
 
-[QueryProperty(nameof(SanPham), "sanphamPara")]
-public partial class EditSanPhamViewModel : ObservableObject
+public partial class EditSanPhamViewModel : ObservableObject, IQueryAttributable
 {
     [ObservableProperty]
-    public SanPham sanpham;
+    private SanPham sanpham;
 
     public EditSanPhamViewModel()
     {
         sanpham = new SanPham();
-    }   
+    }
 
-    [RelayCommand]
+    void IQueryAttributable.ApplyQueryAttributes(System.Collections.Generic.IDictionary<string, object> query)
+    {
+        if (query.ContainsKey("sanphamPara"))
+        {
+            Sanpham = (SanPham)query["sanphamPara"];
+        }
+    }
+
+        [RelayCommand]
     async Task Save()
     {
         if (Sanpham.Ten == "")

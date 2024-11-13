@@ -1,18 +1,13 @@
 ﻿using QuanLySanPham.View;
+using QuanLySanPham.ViewModel;
 
-namespace QuanLySanPham
+namespace QuanLySanPham;
+
+public partial class MainPage : ContentPage
 {
-    public partial class MainPage : ContentPage
+    public MainPage(MainPageViewModel vm)
     {
-        public MainPage()
-        {
-            InitializeComponent();
-        }
-
-        private async void OnCounterClicked(object sender, EventArgs e)
-        {
-            await Shell.Current.GoToAsync(nameof(DanhSachSP));
-        }
+        InitializeComponent();
+        BindingContext = vm;
     }
-
 }

@@ -4,19 +4,11 @@ using CommunityToolkit.Mvvm.Input;
 using QuanLySanPham.Model;
 using QuanLySanPham.View;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Reflection.Metadata;
-using iText.Layout;
-using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
-using System.Text.Json;
-using iText.Layout.Element;
-using Aspose.Cells.Utility;
 using Aspose.Cells;
 
 
 namespace QuanLySanPham.ViewModel;
+
 
 public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
 {
@@ -24,6 +16,9 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     private ObservableCollection<SanPham> dsSanPham;
 
     private SanPham selectedSanPham;
+
+    [ObservableProperty]
+    string title;
 
     [ObservableProperty]
     private int stt;
@@ -37,6 +32,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     {
         dsSanPham = new ObservableCollection<SanPham>();
         Stt = 0;
+        title = "Chào ";
         thanhTien = 0;
         GiaTientmp = 0;
         selectedSanPham = new SanPham();
@@ -124,8 +120,13 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         ThanhTien = 860000;
     }
 
-    void IQueryAttributable.ApplyQueryAttributes(System.Collections.Generic.IDictionary<string, object> query)
+    void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
     {
+        if (query.ContainsKey("userName"))
+        {
+            Title += query["userName"].ToString() ?? "";
+            query.Remove("userName");
+        }
         if (query.ContainsKey("add"))
         {
             Stt++;
