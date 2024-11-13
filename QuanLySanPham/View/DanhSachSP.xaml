@@ -33,7 +33,8 @@
                         SelectionMode="Single"
                         SelectionChangedCommand="{Binding SelectCommand}"
                         SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}"
-                        ItemsSource="{Binding DsSanPham}">
+                        ItemsSource="{Binding DsSanPham}"
+                        HeightRequest="300">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                         <Grid ColumnDefinitions="*, *, *, *, *"

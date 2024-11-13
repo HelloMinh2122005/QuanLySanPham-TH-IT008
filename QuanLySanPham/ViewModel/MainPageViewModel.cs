@@ -2,7 +2,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using QuanLySanPham.View;
+using QuanLySanPham.Model;
 using Aspose.Cells;
+using System.Collections.ObjectModel;
 
 namespace QuanLySanPham.ViewModel;
 
@@ -24,10 +26,57 @@ public partial class MainPageViewModel : ObservableObject
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng nhập tên", "OK");
             return;
         }
-        await Shell.Current.GoToAsync(nameof(DanhSachSP), new Dictionary<string, object>
+
+        var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
         {
-            {"userName", UserName }
+            { DevicePlatform.iOS, new[] { "com.microsoft.excel.xls", "org.openxmlformats.spreadsheetml.sheet" } },
+            { DevicePlatform.Android, new[] { "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" } },
+            { DevicePlatform.WinUI, new[] { ".xls", ".xlsx" } },
+            { DevicePlatform.MacCatalyst, new[] { "com.microsoft.excel.xls", "org.openxmlformats.spreadsheetml.sheet" } }
         });
+
+        var file = await FilePicker.PickAsync(new PickOptions
+        {
+            PickerTitle = "Chọn file Excel",
+            FileTypes = customFileType
+        });
+
+        if (file != null)
+        {
+            try
+            {
+                using var stream = await file.OpenReadAsync();
+                Workbook workbook = new Workbook(stream);
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                ObservableCollection<SanPham> DsSanPham = new ObservableCollection<SanPham>();
+                for (int i = 1; i <= worksheet.Cells.MaxDataRow; i++)
+                {
+                    var maSanPham = worksheet.Cells[i, 0].StringValue;
+                    var tenSanPham = worksheet.Cells[i, 1].StringValue;
+                    var soLuong = worksheet.Cells[i, 2].IntValue;
+                    var giaTien = worksheet.Cells[i, 3].FloatValue;
+
+                    DsSanPham.Add(new SanPham
+                    {
+                        MaSanPham = maSanPham,
+                        Ten = tenSanPham,
+                        SoLuong = soLuong,
+                        GiaTien = giaTien
+                    });
+                }
+
+                await Shell.Current.GoToAsync(nameof(DanhSachSP), new Dictionary<string, object>
+                {
+                    {"DsSanPham", DsSanPham },
+                    {"userName", UserName }
+                });
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", $"An error occurred while reading the Excel file: {ex.Message}", "OK");
+            }
+        }
     }
 
     [RelayCommand]
@@ -43,20 +92,16 @@ public partial class MainPageViewModel : ObservableObject
                 Worksheet worksheet = workbook.Worksheets[0];
 
                 // Set column widths for a cleaner layout
-                worksheet.Cells.SetColumnWidth(0, 5);
+                worksheet.Cells.SetColumnWidth(0, 20);
                 worksheet.Cells.SetColumnWidth(1, 20);
-                worksheet.Cells.SetColumnWidth(2, 20);
+                worksheet.Cells.SetColumnWidth(2, 12);
                 worksheet.Cells.SetColumnWidth(3, 12);
-                worksheet.Cells.SetColumnWidth(4, 12);
-                worksheet.Cells.SetColumnWidth(5, 15);
 
                 // Table headers
-                worksheet.Cells[0, 0].PutValue("STT");
-                worksheet.Cells[0, 1].PutValue("Mã sản phẩm");
-                worksheet.Cells[0, 2].PutValue("Tên sản phẩm");
-                worksheet.Cells[0, 3].PutValue("Số lượng");
-                worksheet.Cells[0, 4].PutValue("Giá tiền");
-                worksheet.Cells[0, 5].PutValue("Tổng tiền");
+                worksheet.Cells[0, 0].PutValue("Mã sản phẩm");
+                worksheet.Cells[0, 1].PutValue("Tên sản phẩm");
+                worksheet.Cells[0, 2].PutValue("Số lượng");
+                worksheet.Cells[0, 3].PutValue("Giá tiền");
 
                 // Apply bold style for headers
                 var headerStyle = workbook.CreateStyle();
@@ -69,8 +114,6 @@ public partial class MainPageViewModel : ObservableObject
                 worksheet.Cells[0, 1].SetStyle(headerStyle);
                 worksheet.Cells[0, 2].SetStyle(headerStyle);
                 worksheet.Cells[0, 3].SetStyle(headerStyle);
-                worksheet.Cells[0, 4].SetStyle(headerStyle);
-                worksheet.Cells[0, 5].SetStyle(headerStyle);
 
                 // Apply border style to the table
                 var borderStyle = workbook.CreateStyle();
@@ -81,7 +124,7 @@ public partial class MainPageViewModel : ObservableObject
 
                 for (int i = 0; i <= 0; i++)
                 {
-                    for (int j = 0; j <= 5; j++)
+                    for (int j = 0; j <= 3; j++)
                     {
                         worksheet.Cells[i, j].SetStyle(borderStyle);
                     }

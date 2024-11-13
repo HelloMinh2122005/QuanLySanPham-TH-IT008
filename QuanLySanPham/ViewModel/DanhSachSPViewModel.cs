@@ -9,7 +9,6 @@ using Aspose.Cells;
 
 namespace QuanLySanPham.ViewModel;
 
-
 public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
 {
     [ObservableProperty]
@@ -27,105 +26,31 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     float thanhTien;
 
     public float GiaTientmp;
+    public string UserName;
 
     public DanhSachSPViewModel()
     {
         dsSanPham = new ObservableCollection<SanPham>();
         Stt = 0;
         title = "Chào ";
+        UserName = "";
         thanhTien = 0;
         GiaTientmp = 0;
         selectedSanPham = new SanPham();
-
-        dsSanPham.Add(new SanPham
-        {
-            MaSanPham = "SP001",
-            Ten = "Bút chì",
-            GiaTien = 5000,
-            SoLuong = 10
-        });
-
-        dsSanPham.Add(new SanPham
-        {
-            MaSanPham = "SP002",
-            Ten = "Bút bi",
-            GiaTien = 7000,
-            SoLuong = 15
-        });
-
-        dsSanPham.Add(new SanPham
-        {
-            MaSanPham = "SP003",
-            Ten = "Thước kẻ",
-            GiaTien = 3000,
-            SoLuong = 20
-        });
-
-        dsSanPham.Add(new SanPham
-        {
-            MaSanPham = "SP004",
-            Ten = "Tẩy",
-            GiaTien = 2000,
-            SoLuong = 25
-        });
-
-        dsSanPham.Add(new SanPham
-        {
-            MaSanPham = "SP005",
-            Ten = "Sổ tay",
-            GiaTien = 15000,
-            SoLuong = 5
-        });
-
-        dsSanPham.Add(new SanPham
-        {
-            MaSanPham = "SP006",
-            Ten = "Bìa kẹp",
-            GiaTien = 12000,
-            SoLuong = 8
-        });
-
-        dsSanPham.Add(new SanPham
-        {
-            MaSanPham = "SP007",
-            Ten = "Kéo",
-            GiaTien = 10000,
-            SoLuong = 12
-        });
-
-        dsSanPham.Add(new SanPham
-        {
-            MaSanPham = "SP008",
-            Ten = "Bút lông",
-            GiaTien = 8000,
-            SoLuong = 18
-        });
-
-        dsSanPham.Add(new SanPham
-        {
-            MaSanPham = "SP009",
-            Ten = "Giấy A4",
-            GiaTien = 50000,
-            SoLuong = 2
-        });
-
-        dsSanPham.Add(new SanPham
-        {
-            MaSanPham = "SP010",
-            Ten = "Bút dạ quang",
-            GiaTien = 6000,
-            SoLuong = 10
-        });
-
-        ThanhTien = 860000;
     }
 
     void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (query.ContainsKey("userName"))
+        if (query.ContainsKey("userName") && query.ContainsKey("DsSanPham"))
         {
-            Title += query["userName"].ToString() ?? "";
+            UserName = query["userName"].ToString() ?? "";
+            Title += UserName;
+            DsSanPham = query["DsSanPham"] as ObservableCollection<SanPham> ?? new ObservableCollection<SanPham>();
+            foreach (var item in DsSanPham)
+                ThanhTien += item.TongTien;
             query.Remove("userName");
+            query.Remove("DsSanPham");
+            return;
         }
         if (query.ContainsKey("add"))
         {
@@ -134,6 +59,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
             DsSanPham.Add(newSP);
             ThanhTien += newSP.TongTien;
             query.Remove("add");
+            return;
         }
         if (query.ContainsKey("edit"))
         {
@@ -144,6 +70,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
             GiaTientmp = 0;
             ThanhTien += editSP.TongTien;
             query.Remove("edit");
+            return;
         }
     }
 
@@ -192,7 +119,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     {
         var finalRes = new FinalRes
         {
-            TenNguoiTao = "Nguyễn Văn A",
+            TenNguoiTao = UserName,
             NgayTao = DateTime.Now,
             TongTien = ThanhTien,
             DsSanPham = DsSanPham
@@ -202,13 +129,12 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
 
         if (folder != null && folder.Folder != null)
         {
-            var filePath = System.IO.Path.Combine(folder.Folder.Path, "finalRes.pdf");
+            var filePath = Path.Combine(folder.Folder.Path, "finalRes.pdf");
             try
             {
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Set column widths for a cleaner layout
                 worksheet.Cells.SetColumnWidth(0, 5);
                 worksheet.Cells.SetColumnWidth(1, 20);
                 worksheet.Cells.SetColumnWidth(2, 20);
@@ -216,15 +142,14 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                 worksheet.Cells.SetColumnWidth(4, 12);
                 worksheet.Cells.SetColumnWidth(5, 15);
 
-                // Header information
                 worksheet.Cells[0, 1].PutValue("Tên người tạo:");
                 worksheet.Cells[0, 2].PutValue(finalRes.TenNguoiTao);
                 worksheet.Cells[1, 1].PutValue("Ngày tạo:");
                 worksheet.Cells[1, 2].PutValue(finalRes.NgayTao.ToString("dd/MM/yyyy"));
                 worksheet.Cells[2, 1].PutValue("Tổng giá trị hóa đơn:");
                 worksheet.Cells[2, 2].PutValue(finalRes.TongTien.ToString());
+                worksheet.Cells[2, 3].PutValue("Đơn vị: VNĐ");
 
-                // Table headers
                 worksheet.Cells[4, 0].PutValue("STT");
                 worksheet.Cells[4, 1].PutValue("Mã sản phẩm");
                 worksheet.Cells[4, 2].PutValue("Tên sản phẩm");
@@ -232,7 +157,6 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                 worksheet.Cells[4, 4].PutValue("Giá tiền");
                 worksheet.Cells[4, 5].PutValue("Tổng tiền");
 
-                // Product details
                 int rowIndex = 5;
                 foreach (var sp in finalRes.DsSanPham)
                 {
@@ -246,13 +170,25 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                     rowIndex++;
                 }
 
-                // Apply bold style for headers
                 var headerStyle = workbook.CreateStyle();
                 headerStyle.Font.IsBold = true;
                 headerStyle.ForegroundColor = System.Drawing.Color.LightGray;
                 headerStyle.Pattern = BackgroundType.Solid;
                 headerStyle.HorizontalAlignment = TextAlignmentType.Center;
 
+                var combinedStyle = workbook.CreateStyle();
+                combinedStyle.Copy(headerStyle);
+                combinedStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                combinedStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                combinedStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                combinedStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+
+                worksheet.Cells[4, 0].SetStyle(combinedStyle);
+                worksheet.Cells[4, 1].SetStyle(combinedStyle);
+                worksheet.Cells[4, 2].SetStyle(combinedStyle);
+                worksheet.Cells[4, 3].SetStyle(combinedStyle);
+                worksheet.Cells[4, 4].SetStyle(combinedStyle);
+                worksheet.Cells[4, 5].SetStyle(combinedStyle);
                 worksheet.Cells[4, 0].SetStyle(headerStyle);
                 worksheet.Cells[4, 1].SetStyle(headerStyle);
                 worksheet.Cells[4, 2].SetStyle(headerStyle);
@@ -260,7 +196,6 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                 worksheet.Cells[4, 4].SetStyle(headerStyle);
                 worksheet.Cells[4, 5].SetStyle(headerStyle);
 
-                // Apply border style to the table
                 var borderStyle = workbook.CreateStyle();
                 borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
                 borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
@@ -275,16 +210,15 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                     }
                 }
 
-                // Apply styling for header cells at the top (creator, date, total)
                 var topHeaderStyle = workbook.CreateStyle();
                 topHeaderStyle.Font.IsBold = true;
                 topHeaderStyle.HorizontalAlignment = TextAlignmentType.Left;
 
-                worksheet.Cells[0, 0].SetStyle(topHeaderStyle);
-                worksheet.Cells[1, 0].SetStyle(topHeaderStyle);
-                worksheet.Cells[2, 0].SetStyle(topHeaderStyle);
+                worksheet.Cells[0, 1].SetStyle(topHeaderStyle);
+                worksheet.Cells[1, 1].SetStyle(topHeaderStyle);
+                worksheet.Cells[2, 1].SetStyle(topHeaderStyle);
+                worksheet.Cells[2, 3].SetStyle(topHeaderStyle);
 
-                // Save the workbook as PDF
                 workbook.Save(filePath, SaveFormat.Pdf);
 
                 await Shell.Current.DisplayAlert("Thông báo", "Xuất file thành công", "OK");
