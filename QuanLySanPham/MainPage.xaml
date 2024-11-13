@@ -36,11 +36,15 @@
                 <Button
                     Text="Nhập file"
                     HorizontalOptions="Fill" 
-                    Command="{Binding EnterCommand}"/>
+                    Command="{Binding EnterCommand}"
+                    BackgroundColor="Blue"
+                    TextColor="White"/>
                 <Button
                     Text="Tạo file"
                     HorizontalOptions="Fill" 
-                    Command="{Binding CreateCommand}"/>
+                    Command="{Binding CreateCommand}"
+                    BackgroundColor="Orange"
+                    TextColor="White"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

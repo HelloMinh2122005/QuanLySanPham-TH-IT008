@@ -176,19 +176,6 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                 headerStyle.Pattern = BackgroundType.Solid;
                 headerStyle.HorizontalAlignment = TextAlignmentType.Center;
 
-                var combinedStyle = workbook.CreateStyle();
-                combinedStyle.Copy(headerStyle);
-                combinedStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-                combinedStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-                combinedStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-                combinedStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
-
-                worksheet.Cells[4, 0].SetStyle(combinedStyle);
-                worksheet.Cells[4, 1].SetStyle(combinedStyle);
-                worksheet.Cells[4, 2].SetStyle(combinedStyle);
-                worksheet.Cells[4, 3].SetStyle(combinedStyle);
-                worksheet.Cells[4, 4].SetStyle(combinedStyle);
-                worksheet.Cells[4, 5].SetStyle(combinedStyle);
                 worksheet.Cells[4, 0].SetStyle(headerStyle);
                 worksheet.Cells[4, 1].SetStyle(headerStyle);
                 worksheet.Cells[4, 2].SetStyle(headerStyle);
@@ -223,9 +210,9 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
 
                 await Shell.Current.DisplayAlert("Thông báo", "Xuất file thành công", "OK");
             }
-            catch (Exception ex)
+            catch 
             {
-                await Shell.Current.DisplayAlert("Error", $"An error occurred while creating the PDF: {ex.Message}", "OK");
+                await Shell.Current.DisplayAlert("Lỗi", "File bạn nhập bị lỗi, có thể do không đúng định dạng hoặc không đúng kiểu dữ liệu", "OK");
             }
         }
         else
