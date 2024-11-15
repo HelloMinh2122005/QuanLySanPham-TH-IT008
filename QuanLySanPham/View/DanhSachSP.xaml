@@ -15,7 +15,6 @@
             SemanticProperties.HeadingLevel="Level1"
             HorizontalOptions="Center" />
 
-
         <Grid 
           Padding="20"
           RowSpacing="10"
@@ -75,39 +74,37 @@
             <Label Text="Thành tiền: " FontAttributes="Bold" FontSize="20"/>
             <Label Grid.Column="1" Text="{Binding ThanhTien}" FontSize="20"/>
         </Grid>
-        
-        <Grid Grid.Row="3"
+
+            <Grid Grid.Row="3"
               ColumnDefinitions="*, Auto, Auto, Auto, *"
               RowDefinitions="Auto, Auto"
               ColumnSpacing="10"
               RowSpacing="10">
 
-            <Button Text="Thêm"
+                <Button Text="Thêm"
                     Command="{Binding AddCommand}"
                     Grid.Column="1"
                     BackgroundColor="Green"
                     HorizontalOptions="Center"/>
-            <Button Text="Xóa"
+                <Button Text="Xóa"
                     Command="{Binding DelCommand}"
                     Grid.Column="2"
                     BackgroundColor="Red"
                     HorizontalOptions="Center"/>
-            <Button Text="Sửa"
+                <Button Text="Sửa"
                     Command="{Binding EditCommand}"
                     Grid.Column="3"
                     BackgroundColor="BlueViolet"
                     HorizontalOptions="Center"/>
-            <Button Grid.Row="4"
+                <Button Grid.Row="4"
                     Grid.Column="2"
                     BackgroundColor="LightGray"
                     TextColor="Black"
                     Text="Xuất PDF"
                     WidthRequest="100"
                     Command="{Binding ExportCommand}"/>
-            
-            </Grid>
 
-            
+            </Grid>
         </Grid>
         
     </VerticalStackLayout>
