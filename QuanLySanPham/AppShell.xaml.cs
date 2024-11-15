@@ -8,6 +8,7 @@ namespace QuanLySanPham
         {
             InitializeComponent();
 
+            Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
             Routing.RegisterRoute(nameof(DanhSachSP), typeof(DanhSachSP));
             Routing.RegisterRoute(nameof(AddSanPham), typeof(AddSanPham));
             Routing.RegisterRoute(nameof(EditSanPham), typeof(EditSanPham));

@@ -25,6 +25,9 @@ namespace QuanLySanPham
 #endif
             builder.Services.AddSingleton<SanPham>();
 
+            builder.Services.AddSingleton<Login>();
+            builder.Services.AddSingleton<LoginViewModel>();
+
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<MainPageViewModel>();
 
