@@ -37,13 +37,13 @@
                     Text="Nhập file"
                     HorizontalOptions="Fill" 
                     Command="{Binding EnterCommand}"
-                    BackgroundColor="Blue"
+                    BackgroundColor="CornflowerBlue"
                     TextColor="White"/>
                 <Button
                     Text="Tạo file"
                     HorizontalOptions="Fill" 
                     Command="{Binding CreateCommand}"
-                    BackgroundColor="Orange"
+                    BackgroundColor="CadetBlue"
                     TextColor="White"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>

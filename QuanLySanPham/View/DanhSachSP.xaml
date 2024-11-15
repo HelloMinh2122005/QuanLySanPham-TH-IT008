@@ -34,7 +34,7 @@
                         SelectionChangedCommand="{Binding SelectCommand}"
                         SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}"
                         ItemsSource="{Binding DsSanPham}"
-                        HeightRequest="300">
+                        HeightRequest="500">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                         <Grid ColumnDefinitions="*, *, *, *, *"
@@ -75,7 +75,7 @@
             <Button Text="Sửa"
                     Command="{Binding EditCommand}"
                     Grid.Column="3"
-                    BackgroundColor="Blue"
+                    BackgroundColor="BlueViolet"
                     HorizontalOptions="Center"/>
             <Button Grid.Row="4"
                     Grid.Column="2"

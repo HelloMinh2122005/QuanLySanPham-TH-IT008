@@ -43,6 +43,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     {
         if (query.ContainsKey("userName") && query.ContainsKey("DsSanPham"))
         {
+            Title = "Chào ";
             UserName = query["userName"].ToString() ?? "";
             Title += UserName;
             DsSanPham = query["DsSanPham"] as ObservableCollection<SanPham> ?? new ObservableCollection<SanPham>();
