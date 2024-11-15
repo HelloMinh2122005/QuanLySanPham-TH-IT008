@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace QuanLySanPham.ViewModel;
 
+[QueryProperty("UserName", "UserName")]
 public partial class MainPageViewModel : ObservableObject
 {
     [ObservableProperty]

@@ -16,6 +16,14 @@ public partial class LoginViewModel : ObservableObject
     [RelayCommand]
     async Task Continue()
     {
-        await Shell.Current.GoToAsync(nameof(MainPage));
+        if (Username == "")
+        {
+            await Shell.Current.DisplayAlert("Thông báo", "Vui lòng nhập tên đăng nhập", "OK");
+            return;
+        }
+        await Shell.Current.GoToAsync(nameof(MainPage), new Dictionary<string, object>
+        {
+            {"UserName", Username }
+        });
     }
 }
