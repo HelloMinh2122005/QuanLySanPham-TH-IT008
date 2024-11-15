@@ -15,19 +15,29 @@
             SemanticProperties.HeadingLevel="Level1"
             HorizontalOptions="Center" />
 
+
         <Grid 
-            Padding="20"
+          Padding="20"
           RowSpacing="10"
           RowDefinitions="Auto, *, Auto, Auto">
 
-        <Grid ColumnDefinitions="*, *, *, *, *"
-              ColumnSpacing="10">
-            <Label Grid.Column="0" Text="Mã sản phẩm" FontAttributes="Bold"/>
-            <Label Grid.Column="1" Text="Tên sản phẩm" FontAttributes="Bold"/>
-            <Label Grid.Column="2" Text="Đơn giá" FontAttributes="Bold" HorizontalOptions="Center"/>
-            <Label Grid.Column="3" Text="Số lượng" FontAttributes="Bold" HorizontalOptions="Center"/>
-            <Label Grid.Column="4" Text="Thành tiền" FontAttributes="Bold" HorizontalOptions="Center"/>
-        </Grid>
+            <Grid ColumnDefinitions="*, *, *, *, *">
+                <Border Grid.Column="0">
+                    <Label Text="Mã sản phẩm" FontAttributes="Bold"/>
+                </Border>
+                <Border Grid.Column="1">
+                    <Label Text="Tên sản phẩm" FontAttributes="Bold"/>
+                </Border>
+                <Border Grid.Column="2">
+                    <Label Text="Đơn giá" FontAttributes="Bold" HorizontalOptions="Center"/>
+                </Border>
+                <Border Grid.Column="3">
+                    <Label Text="Số lượng" FontAttributes="Bold" HorizontalOptions="Center"/>
+                </Border>
+                <Border Grid.Column="4">
+                    <Label Text="Thành tiền" FontAttributes="Bold" HorizontalOptions="Center"/>
+                </Border>
+            </Grid>
 
         <CollectionView Grid.Row="1"
                         SelectionMode="Single"
@@ -38,17 +48,27 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                         <Grid ColumnDefinitions="*, *, *, *, *"
-                          ColumnSpacing="10"
-                          x:DataType="model:SanPham">
-                        <Label Grid.Column="0" Text="{Binding MaSanPham}"/>
-                        <Label Grid.Column="1" Text="{Binding Ten}" />
-                        <Label Grid.Column="2" Text="{Binding GiaTien}" HorizontalOptions="Center"/>
-                        <Label Grid.Column="3" Text="{Binding SoLuong}" HorizontalOptions="Center"/>
-                        <Label Grid.Column="4" Text="{Binding TongTien}" HorizontalOptions="Center"/>
-                    </Grid>
+                              x:DataType="model:SanPham">
+                        <Border Grid.Column="0">
+                            <Label Text="{Binding MaSanPham}"/>
+                        </Border>
+                        <Border Grid.Column="1">
+                            <Label Text="{Binding Ten}" />
+                        </Border>
+                        <Border Grid.Column="2">
+                            <Label Text="{Binding GiaTien}" HorizontalOptions="Center"/>
+                        </Border>
+                        <Border Grid.Column="3">
+                            <Label Text="{Binding SoLuong}" HorizontalOptions="Center"/>
+                        </Border>
+                        <Border Grid.Column="4">
+                            <Label Text="{Binding TongTien}" HorizontalOptions="Center"/>
+                        </Border>
+                        </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+        
 
         <Grid Grid.Row="2"
               ColumnDefinitions="200, *">

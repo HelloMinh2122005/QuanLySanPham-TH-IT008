@@ -1,5 +1,4 @@
-﻿using QuanLySanPham.View;
-using QuanLySanPham.ViewModel;
+﻿using QuanLySanPham.ViewModel;
 
 namespace QuanLySanPham;
 

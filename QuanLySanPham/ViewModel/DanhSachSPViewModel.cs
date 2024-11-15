@@ -66,6 +66,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         {
             var editSP = query["edit"] as SanPham ?? new SanPham();
             var index = DsSanPham.IndexOf(selectedSanPham);
+            selectedSanPham.MaSanPham = "";
             DsSanPham[index] = editSP;
             ThanhTien -= GiaTientmp;
             GiaTientmp = 0;
@@ -91,12 +92,13 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         }
         ThanhTien -= selectedSanPham.TongTien;
         DsSanPham.Remove(selectedSanPham);
+        selectedSanPham.MaSanPham = "";
     }
 
     [RelayCommand]
     public async Task Edit()
     {
-        if (selectedSanPham.MaSanPham == "")
+        if (selectedSanPham == null || selectedSanPham.MaSanPham == "")
         {
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng chọn sản phẩm để sửa", "OK");
             return;
