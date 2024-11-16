@@ -41,15 +41,11 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
 
     void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (query.ContainsKey("userName") && query.ContainsKey("DsSanPham"))
+        if (query.ContainsKey("DsSanPham"))
         {
-            Title = "Chào ";
-            UserName = query["userName"].ToString() ?? "";
-            Title += UserName;
             DsSanPham = query["DsSanPham"] as ObservableCollection<SanPham> ?? new ObservableCollection<SanPham>();
             foreach (var item in DsSanPham)
                 ThanhTien += item.TongTien;
-            query.Remove("userName");
             query.Remove("DsSanPham");
             return;
         }

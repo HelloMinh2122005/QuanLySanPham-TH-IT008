@@ -51,5 +51,11 @@ public partial class EditSanPhamViewModel : ObservableObject, IQueryAttributable
     async Task Cancel()
     {
         await Shell.Current.GoToAsync("..");
-    }   
+    }
+
+    [RelayCommand]
+    async Task EntryTapped()
+    {
+        await Shell.Current.DisplayAlert("Thông báo", "Không thể thay đổi mã sản phẩm", "OK");
+    }
 }
