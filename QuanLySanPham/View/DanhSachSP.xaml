@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuanLySanPham.View.DanhSachSP"
-             Title="{Binding Title}"
              xmlns:viewmodel="clr-namespace:QuanLySanPham.ViewModel"
              x:DataType="viewmodel:DanhSachSPViewModel"
              xmlns:model="clr-namespace:QuanLySanPham.Model">
@@ -11,9 +10,11 @@
 
         <Label
             Text="Danh sách sản phẩm"
-            Style="{StaticResource Headline}"
-            SemanticProperties.HeadingLevel="Level1"
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center" 
+            FontFamily="bold"
+            TextColor="Black"
+            FontAttributes="Bold"
+            FontSize="Large"/>
 
         <Grid 
           Padding="20"

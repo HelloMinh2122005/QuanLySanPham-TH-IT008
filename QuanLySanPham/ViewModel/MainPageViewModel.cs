@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 
 namespace QuanLySanPham.ViewModel;
 
-[QueryProperty("UserName", "UserName")]
 public partial class MainPageViewModel : ObservableObject, IQueryAttributable
 {
     [ObservableProperty]
@@ -84,7 +83,6 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
                 await Shell.Current.GoToAsync(nameof(DanhSachSP), new Dictionary<string, object>
                 {
                     {"DsSanPham", DsSanPham },
-                    {"userName", UserName }
                 });
             }
             catch (Exception ex)
@@ -167,7 +165,6 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
         await Shell.Current.GoToAsync(nameof(DanhSachSP), new Dictionary<string, object>
                 {
                     {"DsSanPham", new SanPham() },
-                    {"userName", UserName }
                 });
     }
 }
