@@ -6,7 +6,7 @@
              x:DataType="viewmodel:DanhSachSPViewModel"
              xmlns:model="clr-namespace:QuanLySanPham.Model">
 
-    <VerticalStackLayout Spacing="20">
+    <VerticalStackLayout Spacing="20" Margin="10,10,10,10">
 
         <Label
             Text="Danh sách sản phẩm"
