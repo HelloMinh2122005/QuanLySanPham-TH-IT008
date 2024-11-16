@@ -2,33 +2,50 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuanLySanPham.View.AddSanPham"
-             Title="Thêm sản phẩm mới"
              xmlns:viewmodel="clr-namespace:QuanLySanPham.ViewModel"
              x:DataType="viewmodel:AddSanPhamViewModel">
-    
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
-          RowSpacing="20">
-        <Label Grid.Row="0" Text="Nhập mã sản phẩm" FontAttributes="Bold"/>
-        <Entry Grid.Row="1" Text="{Binding MaSanPham}" Placeholder="Nhập mã sản phẩm"/>
-        <Label Grid.Row="2" Text="Nhập tên sản phẩm" FontAttributes="Bold"/>
-        <Entry Grid.Row="3" Text="{Binding Ten}" Placeholder="Nhập tên sản phẩm"/>
-        <Label Grid.Row="4" Text="Nhập đơn giá" FontAttributes="Bold"/>
-        <Entry Grid.Row="5" Text="{Binding GiaTien}" Placeholder="Nhập đơn giá"/>
-        <Label Grid.Row="6" Text="Nhập số lượng" FontAttributes="Bold"/>
-        <Entry Grid.Row="7" Text="{Binding SoLuong}" Placeholder="Nhập số lượng"/>
 
-        <Grid Grid.Row="8"
-              ColumnDefinitions="*, Auto, Auto, *"
-              ColumnSpacing="20">
-            <Button Text="Lưu"
-                    Command="{Binding SaveCommand}"
-                    Grid.Column="1"
-                    BackgroundColor="Green"/>
-            <Button Text="Hủy"
-                    Command="{Binding CancelCommand}"
-                    Grid.Column="2"
-                    BackgroundColor="Red"/>
+    <VerticalStackLayout>
+        <Grid>
+            <RoundRectangle 
+                Margin="-5, -30, -5, -2"
+                Fill="White"/>
+
+            <VerticalStackLayout Margin="30, 0, 30, 0">
+                <Label FontAttributes="Bold"
+                       FontFamily="bold"
+                       FontSize="Large"
+                       Text="Thêm sản phẩm mới"
+                       HorizontalOptions="Center"/>
+                <Label FontFamily="medium"
+                       Text="Vui lòng nhập đầy đủ thông tin sản phẩm mới"
+                       TextColor="Gray"
+                       HorizontalOptions="Center"/>
+
+                <Grid Margin="0, 30, 0, 0" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto" RowSpacing="20">
+                    <Label Grid.Row="0" Text="Nhập mã sản phẩm" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
+                    <Entry Grid.Row="1" Text="{Binding MaSanPham}" Placeholder="Nhập mã sản phẩm"/>
+                    <Label Grid.Row="2" Text="Nhập tên sản phẩm" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
+                    <Entry Grid.Row="3" Text="{Binding Ten}" Placeholder="Nhập tên sản phẩm"/>
+                    <Label Grid.Row="4" Text="Nhập đơn giá" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
+                    <Entry Grid.Row="5" Text="{Binding GiaTien}" Placeholder="Nhập đơn giá"/>
+                    <Label Grid.Row="6" Text="Nhập số lượng" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
+                    <Entry Grid.Row="7" Text="{Binding SoLuong}" Placeholder="Nhập số lượng"/>
+
+                    <Grid Grid.Row="8"
+                          ColumnDefinitions="*, *"
+                          ColumnSpacing="20">
+                        <Button Text="Lưu"
+                                Command="{Binding SaveCommand}"
+                                Grid.Column="0"
+                                BackgroundColor="Green"/>
+                        <Button Text="Hủy"
+                                Command="{Binding CancelCommand}"
+                                Grid.Column="1"
+                                BackgroundColor="Red"/>
+                    </Grid>
+                </Grid>
+            </VerticalStackLayout>
         </Grid>
-    </Grid>
-    
+    </VerticalStackLayout>
 </ContentPage>
