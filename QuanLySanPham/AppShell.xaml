@@ -6,7 +6,8 @@
     xmlns:local="clr-namespace:QuanLySanPham"
     xmlns:view="clr-namespace:QuanLySanPham.View"
     Shell.FlyoutBehavior="Disabled"
-    Title="QuanLySanPham">
+    Title="QuanLySanPham"
+    NavigationPage.HasNavigationBar="False">
 
     <ShellContent
         ContentTemplate="{DataTemplate view:Login}"

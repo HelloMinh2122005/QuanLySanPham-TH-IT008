@@ -9,18 +9,32 @@ using System.Collections.ObjectModel;
 namespace QuanLySanPham.ViewModel;
 
 [QueryProperty("UserName", "UserName")]
-public partial class MainPageViewModel : ObservableObject
+public partial class MainPageViewModel : ObservableObject, IQueryAttributable
 {
     [ObservableProperty]
     private string userName;
 
+    [ObservableProperty]
+    private string hello;
+
     public MainPageViewModel()
     {
-        userName = "";
+        UserName = "";
+        Hello = "Chào ";
+    }
+
+    void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query.ContainsKey("UserName"))
+        {
+            Hello = "Chào ";
+            UserName = query["UserName"].ToString() ?? "";
+            Hello += UserName;
+        }
     }
 
     [RelayCommand]
-    async Task Enter()
+    async Task NhapFile()
     {
         if (UserName == "")
         {
@@ -81,7 +95,7 @@ public partial class MainPageViewModel : ObservableObject
     }
 
     [RelayCommand]
-    async Task Create()
+    async Task TaoFileMoi()
     {
         var folder = await FolderPicker.PickAsync(default);
         if (folder != null && folder.Folder != null)
@@ -145,5 +159,15 @@ public partial class MainPageViewModel : ObservableObject
         {
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng chọn thư mục để lưu file", "OK");
         }
+    }
+
+    [RelayCommand]
+    async Task BoQua()
+    {
+        await Shell.Current.GoToAsync(nameof(DanhSachSP), new Dictionary<string, object>
+                {
+                    {"DsSanPham", new SanPham() },
+                    {"userName", UserName }
+                });
     }
 }

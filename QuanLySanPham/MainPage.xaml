@@ -3,74 +3,148 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuanLySanPham.MainPage"
              xmlns:viewmodel="clr-namespace:QuanLySanPham.ViewModel"
-             x:DataType="viewmodel:MainPageViewModel"
-             NavigationPage.HasNavigationBar="False">
+             x:DataType="viewmodel:MainPageViewModel">
 
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <LinearGradientBrush x:Key="gradient" EndPoint="0, 1">
-                <GradientStop Offset="0" Color="#6C06E6"/>
-                <GradientStop Offset="1" Color="#FF228B"/>
-            </LinearGradientBrush>
-        </ResourceDictionary>
-    </ContentPage.Resources>
-
-    <Grid RowDefinitions=".3*, .7*">
-        <Image Aspect="AspectFill" Source="background.jpg"/>
-        <Grid BackgroundColor="#4F3F9B" Opacity="0.8"/>
-        <Grid ColumnDefinitions="*,*">
-            <Border HeightRequest="150"
-                    WidthRequest="150"
-                    Stroke="{StaticResource gradient}"
-                    StrokeThickness="3"
-                    BackgroundColor="White">
-                <Border.StrokeShape>
-                    <Ellipse></Ellipse>
-                </Border.StrokeShape>
-                <Image Source="icon.png"
-                   Aspect="AspectFit"
-                   HeightRequest="150"/>
-            </Border>
-        </Grid>
-        <Grid Grid.Row="1">
+    <VerticalStackLayout>
+        <Grid>
             <RoundRectangle 
                 Margin="-5, -30, -5, -2"
-                CornerRadius="30, 30, 0, 0"
+                CornerRadius="30, 0, 0, 30"
                 Fill="White"/>
 
             <VerticalStackLayout Margin="30, 0, 30, 0">
                 <Label FontAttributes="Bold"
                        FontFamily="bold"
                        FontSize="Large"
-                       Text="Quản lý đơn hàng"
+                       Text="{Binding Hello}"
                        TextColor="Black"/>
                 <Label FontFamily="medium"
-                       Text="Đăng nhập để tiếp tục"
+                       Text="Để tiếp tục, hãy nhập thông tin tập tin."
                        TextColor="Gray"/>
-                <Grid Margin="0, 30, 0, 0" ColumnDefinitions=".2*, .8*">
-                    <RoundRectangle
-                        BackgroundColor="#EDEBF6"
-                        CornerRadius="10"
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center"
-                        HeightRequest="60"
-                        WidthRequest="60"/>
-                    <Image HeightRequest="60"
-                           WidthRequest="60"
-                           Source="login_icon.png"/>
-                    <Entry Grid.Column="1"
-                           Placeholder="Hãy nhập tên của bạn"
-                           Text="{Binding }"/>
-                </Grid>
+                <Grid Margin="0, 30, 0, 0" RowDefinitions="*, *, *" RowSpacing="20">
 
-                <Button Text="Tiếp tục"
-                        Margin="0,50,0,0"
-                        BackgroundColor="#4F3F9B"
-                        HeightRequest="60"
-                        Command="{Binding }"/>
+                    <!-- First Tappable Section -->
+                    <Grid ColumnDefinitions=".2*, .8*" ColumnSpacing="10">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NhapFileCommand}" />
+                        </Grid.GestureRecognizers>
+                        
+                        <RoundRectangle BackgroundColor="Lavender"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    CornerRadius="10,0,10,0"
+                                    HeightRequest="100"
+                                    WidthRequest="100"/>
+
+                        <RoundRectangle Grid.Column="1"
+                                        BackgroundColor="Lavender"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        CornerRadius="0,10,0,10"
+                                        HeightRequest="100"
+                                        WidthRequest="300"/>
+
+                        <Image HeightRequest="100"
+                               WidthRequest="100"
+                               Source="login_icon.png"/>
+
+                        <Grid Grid.Column="1"
+                              RowDefinitions=".3*, .7*"
+                              Padding="5">
+                            <Label Text="Nhập file"
+                                   FontAttributes="Bold"
+                                   FontSize="Medium"
+                                   TextColor="DarkBlue"/>
+                            <Label Grid.Row="1"
+                                   Text="Nếu bạn đã có file excel theo định dạng, hãy nhấn vào đây."
+                                   FontFamily="medium"
+                                   TextColor="Gray"/>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Second Tappable Section -->
+                    <Grid Grid.Row="1" ColumnDefinitions=".2*, .8*" ColumnSpacing="10">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding TaoFileMoiCommand}" />
+                        </Grid.GestureRecognizers>
+
+                        <RoundRectangle BackgroundColor="Lavender"
+                                        CornerRadius="10"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        HeightRequest="100"
+                                        WidthRequest="100"/>
+
+                        <RoundRectangle Grid.Column="1"
+                                        BackgroundColor="Lavender"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        CornerRadius="0,10,0,10"
+                                        HeightRequest="100"
+                                        WidthRequest="300"/>
+                        
+                        <Image Grid.Row="1" 
+                               HeightRequest="100"
+                               WidthRequest="100"
+                               Source="login_icon.png"/>        
+
+                        <Grid Grid.Column="1"
+                              RowDefinitions=".3*, .7*"
+                              Padding="5">
+                            <Label Text="Tạo file mới"
+                                   FontAttributes="Bold"
+                                   FontSize="Medium"
+                                   TextColor="DarkBlue"/>
+                            <Label Grid.Row="1"
+                                   Text="Nếu bạn chưa có file excel theo định dạng, hãy nhấn vào đây."
+                                   FontFamily="medium"
+                                   TextColor="Gray"/>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Third Tappable Section -->
+                    <Grid Grid.Row="2" ColumnDefinitions=".2*, .8*" ColumnSpacing="10">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BoQuaCommand}" />
+                        </Grid.GestureRecognizers>
+
+                        <RoundRectangle BackgroundColor="Lavender"
+                                        CornerRadius="10"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        HeightRequest="100"
+                                        WidthRequest="100"/>
+
+                        <RoundRectangle Grid.Column="1"
+                                        BackgroundColor="Lavender"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        CornerRadius="0,10,0,10"
+                                        HeightRequest="100"
+                                        WidthRequest="300"/>
+
+                        <Image Grid.Row="2" 
+                               HeightRequest="100"
+                               WidthRequest="100"
+                               Source="login_icon.png"/>        
+
+                        <Grid Grid.Column="1"
+                              RowDefinitions=".3*, .7*"
+                              Padding="5">
+                            <Label Text="Bỏ qua"
+                                   FontAttributes="Bold"
+                                   FontSize="Medium"
+                                   TextColor="DarkBlue"/>
+                            <Label Grid.Row="1"
+                                   Text="Bắt đầu nhập danh sách sản phẩm mà không cần file."
+                                   FontFamily="medium"
+                                   TextColor="Gray"/>       
+                        </Grid>
+                    </Grid>
+
+                </Grid>
 
             </VerticalStackLayout>
         </Grid>
-    </Grid>
-
+    </VerticalStackLayout>
 </ContentPage>

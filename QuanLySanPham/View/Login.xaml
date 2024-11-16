@@ -9,15 +9,15 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <LinearGradientBrush x:Key="gradient" EndPoint="0, 1">
-                <GradientStop Offset="0" Color="#6C06E6"/>
-                <GradientStop Offset="1" Color="#FF228B"/>
+                <GradientStop Offset="0" Color="Indigo"/>
+                <GradientStop Offset="1" Color="DeepPink"/>
             </LinearGradientBrush>
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <Grid RowDefinitions=".3*, .7*">
         <Image Aspect="AspectFill" Source="background.jpg"/>
-        <Grid BackgroundColor="#4F3F9B" Opacity="0.8"/>
+        <Grid BackgroundColor="DarkSlateBlue" Opacity="0.8"/>
         <Grid ColumnDefinitions="*,*">
             <Border HeightRequest="150"
                     WidthRequest="150"
@@ -49,7 +49,7 @@
                        TextColor="Gray"/>
                 <Grid Margin="0, 30, 0, 0" ColumnDefinitions=".2*, .8*">
                     <RoundRectangle
-                        BackgroundColor="#EDEBF6"
+                        BackgroundColor="Lavender"
                         CornerRadius="10"
                         HorizontalOptions="Center"
                         VerticalOptions="Center"
@@ -59,13 +59,15 @@
                            WidthRequest="60"
                            Source="login_icon.png"/>
                     <Entry Grid.Column="1"
+                           TextColor="Black"
                            Placeholder="Hãy nhập tên của bạn"
                            Text="{Binding Username}"/>
                 </Grid>
 
                 <Button Text="Tiếp tục"
+                        TextColor="White"
                         Margin="0,50,0,0"
-                        BackgroundColor="#4F3F9B"
+                        BackgroundColor="DarkSlateBlue"
                         HeightRequest="60"
                         Command="{Binding ContinueCommand}"/>
 

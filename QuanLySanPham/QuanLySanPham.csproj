@@ -58,6 +58,9 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Images\background.jpg" />
+	  <None Remove="Resources\Images\cashier_background1.jfif" />
+	  <None Remove="Resources\Images\cashier_background2.jfif" />
+	  <None Remove="Resources\Images\cashier_background3.jfif" />
 	  <None Remove="Resources\Images\cashier_icon.png" />
 	  <None Remove="Resources\Images\icon.png" />
 	  <None Remove="Resources\Images\login_icon.png" />
