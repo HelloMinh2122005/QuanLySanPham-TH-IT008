@@ -46,7 +46,7 @@
 
                         <Image HeightRequest="100"
                                WidthRequest="100"
-                               Source="login_icon.png"/>
+                               Source="input_file_icon.png"/>
 
                         <Grid Grid.Column="1"
                               RowDefinitions=".3*, .7*"
@@ -86,7 +86,7 @@
                         <Image Grid.Row="1" 
                                HeightRequest="100"
                                WidthRequest="100"
-                               Source="login_icon.png"/>        
+                               Source="new_file_icon.png"/>        
 
                         <Grid Grid.Column="1"
                               RowDefinitions=".3*, .7*"
@@ -126,7 +126,7 @@
                         <Image Grid.Row="2" 
                                HeightRequest="100"
                                WidthRequest="100"
-                               Source="login_icon.png"/>        
+                               Source="continue_icon.png"/>        
 
                         <Grid Grid.Column="1"
                               RowDefinitions=".3*, .7*"

@@ -59,8 +59,11 @@
 	<ItemGroup>
 	  <None Remove="Resources\Images\background.jpg" />
 	  <None Remove="Resources\Images\cashier_icon.png" />
+	  <None Remove="Resources\Images\continue_icon.png" />
 	  <None Remove="Resources\Images\icon.png" />
+	  <None Remove="Resources\Images\input_file_icon.png" />
 	  <None Remove="Resources\Images\login_icon.png" />
+	  <None Remove="Resources\Images\new_file_icon.png" />
 	</ItemGroup>
 
 	<ItemGroup>
