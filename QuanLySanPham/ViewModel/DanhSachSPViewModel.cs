@@ -9,6 +9,7 @@ using Aspose.Cells;
 
 namespace QuanLySanPham.ViewModel;
 
+[QueryProperty("UserName", "UserName")]
 public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
 {
     [ObservableProperty]
@@ -25,6 +26,12 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty]
     float thanhTien;
 
+    [ObservableProperty]
+    int daThem;
+
+    [ObservableProperty]
+    int daSua;
+
     public float GiaTientmp;
     public string UserName;
 
@@ -39,11 +46,35 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         selectedSanPham = new SanPham();
     }
 
-    void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
+    private void AddSPifEmpty()
+    {
+        DsSanPham.Add(new SanPham
+        { MaSanPham = "SP01", Ten = "Sản phẩm 1", SoLuong = 1, GiaTien = 1000 }
+        );
+        DsSanPham.Add(new SanPham
+        { MaSanPham = "SP02", Ten = "Sản phẩm 2", SoLuong = 2, GiaTien = 2000 }
+        );
+        DsSanPham.Add(new SanPham
+        { MaSanPham = "SP03", Ten = "Sản phẩm 3", SoLuong = 3, GiaTien = 3000 }
+        );
+        DsSanPham.Add(new SanPham
+        { MaSanPham = "SP04", Ten = "Sản phẩm 4", SoLuong = 4, GiaTien = 4000 }
+        );
+        DsSanPham.Add(new SanPham
+        { MaSanPham = "SP05", Ten = "Sản phẩm 5", SoLuong = 5, GiaTien = 5000 }
+        );
+    }
+
+        void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (query.ContainsKey("DsSanPham"))
         {
             DsSanPham = query["DsSanPham"] as ObservableCollection<SanPham> ?? new ObservableCollection<SanPham>();
+            ThanhTien = 0;
+            DaThem = 0;
+            DaSua = 0;
+            if (DsSanPham.Count == 0)
+                AddSPifEmpty();
             foreach (var item in DsSanPham)
                 ThanhTien += item.TongTien;
             query.Remove("DsSanPham");
@@ -52,6 +83,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         if (query.ContainsKey("add"))
         {
             Stt++;
+            DaThem++;
             var newSP = query["add"] as SanPham ?? new SanPham();
             DsSanPham.Add(newSP);
             ThanhTien += newSP.TongTien;
@@ -60,6 +92,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         }
         if (query.ContainsKey("edit"))
         {
+            DaSua++;
             var editSP = query["edit"] as SanPham ?? new SanPham();
             var index = DsSanPham.IndexOf(selectedSanPham);
             selectedSanPham.MaSanPham = "";
@@ -103,7 +136,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         {
             {"sanphamPara", selectedSanPham }
         });
-        
+
         GiaTientmp = selectedSanPham.TongTien;
     }
 

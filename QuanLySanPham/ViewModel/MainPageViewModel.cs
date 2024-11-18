@@ -83,6 +83,7 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
                 await Shell.Current.GoToAsync(nameof(DanhSachSP), new Dictionary<string, object>
                 {
                     {"DsSanPham", DsSanPham },
+                    {"UserName", UserName }
                 });
             }
             catch (Exception ex)
@@ -165,6 +166,7 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
         await Shell.Current.GoToAsync(nameof(DanhSachSP), new Dictionary<string, object>
                 {
                     {"DsSanPham", new SanPham() },
+                    {"UserName", UserName }
                 });
     }
 }
