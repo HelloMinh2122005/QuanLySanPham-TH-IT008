@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuanLySanPham.MainPage"
              xmlns:viewmodel="clr-namespace:QuanLySanPham.ViewModel"
-             x:DataType="viewmodel:MainPageViewModel">
+             x:DataType="viewmodel:MainPageViewModel"
+             BackgroundColor="White">
 
     <VerticalStackLayout>
         <Grid>
@@ -28,7 +29,7 @@
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NhapFileCommand}" />
                         </Grid.GestureRecognizers>
-                        
+
                         <RoundRectangle BackgroundColor="Lavender"
                                     HorizontalOptions="Center"
                                     VerticalOptions="Center"
@@ -82,11 +83,11 @@
                                         CornerRadius="0,10,0,10"
                                         HeightRequest="100"
                                         WidthRequest="300"/>
-                        
+
                         <Image Grid.Row="1" 
                                HeightRequest="100"
                                WidthRequest="100"
-                               Source="new_file_icon.png"/>        
+                               Source="new_file_icon.png"/>
 
                         <Grid Grid.Column="1"
                               RowDefinitions=".3*, .7*"
@@ -126,25 +127,42 @@
                         <Image Grid.Row="2" 
                                HeightRequest="100"
                                WidthRequest="100"
-                               Source="continue_icon.png"/>        
+                               Source="continue_icon.png"/>
 
                         <Grid Grid.Column="1"
                               RowDefinitions=".3*, .7*"
                               Padding="5">
-                            <Label Text="Bỏ qua"
+                            <Label Text="Tiếp tục"
                                    FontAttributes="Bold"
                                    FontSize="Medium"
                                    TextColor="DarkBlue"/>
                             <Label Grid.Row="1"
                                    Text="Bắt đầu nhập danh sách sản phẩm mà không cần file."
                                    FontFamily="medium"
-                                   TextColor="Gray"/>       
+                                   TextColor="Gray"/>
                         </Grid>
                     </Grid>
 
                 </Grid>
-
             </VerticalStackLayout>
+        </Grid>
+
+        <VerticalStackLayout HeightRequest="100"/>
+
+        <Grid
+            ColumnDefinitions="30, *, Auto, 20"
+            ColumnSpacing="10">
+            <Entry Grid.Column="1" 
+                   Text="{Binding DataPath}"
+                   IsReadOnly="True">
+                <Entry.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding EntryTapCommand}" />
+                </Entry.GestureRecognizers>
+            </Entry>
+            <Button Grid.Column="2"
+                    Text="Chọn"
+                    FontSize="Medium"
+                    Command="{Binding ChonCommand}"/>
         </Grid>
     </VerticalStackLayout>
 </ContentPage>

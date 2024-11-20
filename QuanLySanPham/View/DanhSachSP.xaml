@@ -6,7 +6,7 @@
              x:DataType="viewmodel:DanhSachSPViewModel"
              xmlns:model="clr-namespace:QuanLySanPham.Model">
 
-    <VerticalStackLayout Spacing="20" Margin="10,10,10,10">
+    <VerticalStackLayout Spacing="5" Margin="10,10,10,10">
 
         <Label
             Text="Danh sách sản phẩm"
@@ -19,7 +19,7 @@
         <Grid 
           Padding="20"
           RowSpacing="10"
-          RowDefinitions="Auto, *, Auto, Auto">
+          RowDefinitions="Auto, *, Auto, Auto, Auto">
 
             <Grid ColumnDefinitions="*, *, *, *, *">
                 <Border Grid.Column="0">
@@ -44,7 +44,7 @@
                         SelectionChangedCommand="{Binding SelectCommand}"
                         SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}"
                         ItemsSource="{Binding DsSanPham}"
-                        HeightRequest="450">
+                        HeightRequest="400">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                         <Grid ColumnDefinitions="*, *, *, *, *"
@@ -68,9 +68,14 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
+
+            <VerticalStackLayout Grid.Row="2" HeightRequest="10">
+                
+            </VerticalStackLayout>
         
 
-        <Grid Grid.Row="2"
+        <Grid Grid.Row="3"
               ColumnDefinitions="200, *"
               RowDefinitions="Auto, Auto, Auto, Auto">
                 <Label Text="Số sản phẩm đã thêm mới: " FontAttributes="Bold" FontSize="15"/>
@@ -83,34 +88,48 @@
                 <Label Grid.Row="3" Grid.Column="1" Text="{Binding ThanhTien}" FontSize="20"/>
         </Grid>
 
-            <Grid Grid.Row="3"
-              ColumnDefinitions="*, Auto, Auto, Auto, *"
+            <Grid Grid.Row="4"
+              ColumnDefinitions="Auto, 100, Auto"
               RowDefinitions="Auto, Auto"
-              ColumnSpacing="10"
-              RowSpacing="10">
+              RowSpacing="10"
+              ColumnSpacing="10">
 
                 <Button Text="Thêm"
                     Command="{Binding AddCommand}"
-                    Grid.Column="1"
+                    Grid.Column="0"
                     BackgroundColor="Green"
-                    HorizontalOptions="Center"/>
+                    HorizontalOptions="Center"
+                    WidthRequest="100"/>
                 <Button Text="Xóa"
                     Command="{Binding DelCommand}"
-                    Grid.Column="2"
+                    Grid.Column="1"
                     BackgroundColor="Red"
-                    HorizontalOptions="Center"/>
+                    HorizontalOptions="Center"
+                        WidthRequest="100"/>
                 <Button Text="Sửa"
                     Command="{Binding EditCommand}"
-                    Grid.Column="3"
-                    BackgroundColor="BlueViolet"
-                    HorizontalOptions="Center"/>
-                <Button Grid.Row="4"
                     Grid.Column="2"
+                    BackgroundColor="BlueViolet"
+                    HorizontalOptions="Center"
+                        WidthRequest="100"/>
+                <Grid Grid.Row="4"
+                      Grid.Column="1"
+                      ColumnDefinitions="Auto, Auto">
+                    
+                <Button
+                    Grid.Column="0"
+                    BackgroundColor="LightGray"
+                    TextColor="Black"
+                    Text="Xuất PDF"
+                    WidthRequest="100"/>
+                <Button 
+                    Grid.Column="1"
                     BackgroundColor="LightGray"
                     TextColor="Black"
                     Text="Xuất PDF"
                     WidthRequest="100"
                     Command="{Binding ExportCommand}"/>
+                </Grid>
 
             </Grid>
         </Grid>

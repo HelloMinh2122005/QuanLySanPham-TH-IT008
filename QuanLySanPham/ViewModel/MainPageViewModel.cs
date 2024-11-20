@@ -16,10 +16,14 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty]
     private string hello;
 
+    [ObservableProperty]
+    private string dataPath;
+
     public MainPageViewModel()
     {
         UserName = "";
         Hello = "Chào ";
+        DataPath = "Hiện chưa chọn tập tin nào.";
     }
 
     void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
@@ -35,12 +39,6 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
     [RelayCommand]
     async Task NhapFile()
     {
-        if (UserName == "")
-        {
-            await Shell.Current.DisplayAlert("Thông báo", "Vui lòng nhập tên", "OK");
-            return;
-        }
-
         var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
         {
             { DevicePlatform.iOS, new[] { "com.microsoft.excel.xls", "org.openxmlformats.spreadsheetml.sheet" } },
@@ -59,6 +57,7 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
         {
             try
             {
+                DataPath = file.FullPath;
                 using var stream = await file.OpenReadAsync();
                 Workbook workbook = new Workbook(stream);
                 Worksheet worksheet = workbook.Worksheets[0];
@@ -168,5 +167,22 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
                     {"DsSanPham", new SanPham() },
                     {"UserName", UserName }
                 });
+    }
+
+    [RelayCommand]
+    async Task Chon()
+    {
+        if (DataPath == "Hiện chưa chọn tập tin nào.")
+        {
+            await Shell.Current.DisplayAlert("Thông báo", "Vui lòng chọn tập tin Excel trước khi chọn", "OK");
+            return;
+        }
+        await Shell.Current.GoToAsync($"{nameof(DanhSachSP)}?nochange=ok");
+    }
+
+    [RelayCommand]
+    async Task EntryTap()
+    {
+        await Shell.Current.DisplayAlert("Tập tin của bạn", DataPath, "OK");
     }
 }

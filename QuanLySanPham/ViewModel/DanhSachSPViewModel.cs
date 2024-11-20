@@ -65,8 +65,12 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         );
     }
 
-        void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
+    void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
     {
+        if (query.ContainsKey("nochange"))
+        {
+            return;
+        }
         if (query.ContainsKey("DsSanPham"))
         {
             DsSanPham = query["DsSanPham"] as ObservableCollection<SanPham> ?? new ObservableCollection<SanPham>();
@@ -251,5 +255,11 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         {
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng chọn thư mục để lưu file", "OK");
         }
+    }
+
+    [RelayCommand]
+    async Task ViewHis()
+    {
+        await Task.CompletedTask;
     }
 }

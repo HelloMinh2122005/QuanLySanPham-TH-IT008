@@ -40,6 +40,9 @@ namespace QuanLySanPham
             builder.Services.AddTransient<EditSanPham>();
             builder.Services.AddTransient<EditSanPhamViewModel>();
 
+            builder.Services.AddTransient<ViewHistory>();
+            builder.Services.AddTransient<ViewHistoryViewModel>();
+
             return builder.Build();
         }
     }
