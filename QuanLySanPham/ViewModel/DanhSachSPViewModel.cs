@@ -105,14 +105,54 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
             DaSua++;
             var editSP = query["edit"] as SanPham ?? new SanPham();
             var index = DsSanPham.IndexOf(selectedSanPham);
-            selectedSanPham.MaSanPham = "";
             DsSanPham[index] = editSP;
             DsSanPhamSua.Add(editSP);
             ThanhTien -= GiaTientmp;
             GiaTientmp = 0;
             ThanhTien += editSP.TongTien;
+            if(selectedSanPham != null)
+                selectedSanPham.MaSanPham = "";
             query.Remove("edit");
             return;
+        }
+        if (query.ContainsKey("DSRecover"))
+        {
+            var dsToRecover = query["DSRecover"] as ObservableCollection<HistoryItem>;
+            if (dsToRecover != null)
+            {
+                foreach (var historyItem in dsToRecover)
+                {
+                    var sanPham = historyItem.SanPham;
+                    var action = historyItem.Action;
+
+                    switch (action)
+                    {
+                        case "Thêm":
+                            DsSanPham.Remove(sanPham);
+                            DsSanPhamThem.Remove(sanPham);
+                            ThanhTien -= sanPham.TongTien;
+                            break;
+
+                        case "Sửa":
+                            var existingSP = DsSanPham.FirstOrDefault(sp => sp.MaSanPham == sanPham.MaSanPham);
+                            if (existingSP != null)
+                            {
+                                ThanhTien -= existingSP.TongTien;
+                                DsSanPham.Remove(existingSP);
+                                DsSanPham.Add(sanPham);
+                                DsSanPhamSua.Remove(existingSP);
+                                ThanhTien += sanPham.TongTien;
+                            }
+                            break;
+
+                        case "Xóa":
+                            DsSanPham.Add(sanPham);
+                            DsSanPhamXoa.Remove(sanPham);
+                            ThanhTien += sanPham.TongTien;
+                            break;
+                    }
+                }
+            }
         }
     }
 
@@ -130,9 +170,9 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng chọn sản phẩm để xóa", "OK");
             return;
         }
-        ThanhTien -= selectedSanPham.TongTien;
         try
         {
+            ThanhTien -= selectedSanPham.TongTien;
             DsSanPhamXoa.Add(selectedSanPham);
             DsSanPham.Remove(selectedSanPham);
         }
@@ -140,7 +180,8 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         {
             await Shell.Current.DisplayAlert("Lỗi", ex.Message, "OK");
         }
-        selectedSanPham.MaSanPham = "";
+        if (selectedSanPham != null)
+            selectedSanPham.MaSanPham = "";
     }
 
     [RelayCommand]
@@ -279,7 +320,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         {
             {"DSSPXoa", DsSanPhamXoa },
             {"DSSPThem", DsSanPhamThem },
-            {"DsSPSua", DsSanPhamSua }
+            {"DSSPSua", DsSanPhamSua }
         });
     }
 }

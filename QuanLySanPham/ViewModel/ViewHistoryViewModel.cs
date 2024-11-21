@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using QuanLySanPham.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,36 +10,93 @@ using System.Threading.Tasks;
 
 namespace QuanLySanPham.ViewModel;
 
-[QueryProperty("SoSPThem", "SoSPThem")]
-[QueryProperty("SoSPSua", "SoSPSua")]
-[QueryProperty("SoSPXoa", "SoSPXoa")]
-[QueryProperty("SoSPBandau", "SoSPBandau")]
-[QueryProperty("DsSanPhamChinhSua", "DsSanPhamChinhSua")]
-public partial class ViewHistoryViewModel : ObservableObject
+public partial class ViewHistoryViewModel : ObservableObject, IQueryAttributable
 {
     [ObservableProperty]
-    private int soSPThem;
+    private ObservableCollection<SanPham> dsSpThem = new();
 
     [ObservableProperty]
-    private int soSPSua;
+    private ObservableCollection<SanPham> dsSpSua = new();
 
     [ObservableProperty]
-    private int soSPXoa;
+    private ObservableCollection<SanPham> dsSpXoa = new();
 
     [ObservableProperty]
-    private int soSPBandau;
+    private ObservableCollection<HistoryItem> dsToShow = new();
 
-    [ObservableProperty]
-    private ObservableCollection<SanPham> dsSanPhamChinhSua;
+    private ObservableCollection<HistoryItem> dsToBack = new();
 
-    public ViewHistoryViewModel()
+    private HistoryItem selectedSanPham = new();
+
+    void IQueryAttributable.ApplyQueryAttributes(System.Collections.Generic.IDictionary<string, object> query)
     {
-        SoSPThem = 0;
-        SoSPSua = 0;
-        SoSPXoa = 0;
-        SoSPBandau = 0;
-        DsSanPhamChinhSua = new ObservableCollection<SanPham>();
+        if (query.ContainsKey("DSSPThem"))
+        {
+            DsSpThem.Clear();
+            DsSpSua.Clear();
+            DsSpXoa.Clear();
+            DsToShow.Clear();
+            dsToBack.Clear();
+
+            DsSpThem = (ObservableCollection<SanPham>)query["DSSPThem"];
+            DsSpSua = (ObservableCollection<SanPham>)query["DSSPSua"];
+            DsSpXoa = (ObservableCollection<SanPham>)query["DSSPXoa"];
+
+            foreach (var item in DsSpThem)
+                DsToShow.Add(new HistoryItem { SanPham = item, Action = "Thêm" });
+
+            foreach (var item in DsSpSua)
+                DsToShow.Add(new HistoryItem { SanPham = item, Action = "Sửa" });
+
+            foreach (var item in DsSpXoa)
+                DsToShow.Add(new HistoryItem { SanPham = item, Action = "Xóa" });
+        }
     }
 
+    [RelayCommand]
+    public void OnItemSelected(HistoryItem sp)
+    {
+        selectedSanPham = sp;
+    }
 
+    [RelayCommand]
+    public void Recover()
+    {
+        if (selectedSanPham == null)
+        {
+            Shell.Current.DisplayAlert("Thông báo", "Chưa chọn sản phẩm nào", "OK");
+            return;
+        }
+
+        var historyItem = DsToShow.FirstOrDefault(x => x.SanPham == selectedSanPham.SanPham);
+        if (historyItem == null) return;
+
+        switch (historyItem.Action)
+        {
+            case "Thêm":
+                DsSpThem.Remove(selectedSanPham.SanPham);
+                DsToShow.Remove(historyItem);
+                dsToBack.Add(historyItem);
+                break;
+            case "Sửa":
+                DsSpSua.Remove(selectedSanPham.SanPham);
+                DsToShow.Remove(historyItem);
+                dsToBack.Add(historyItem);
+                break;
+            case "Xóa":
+                DsSpXoa.Remove(selectedSanPham.SanPham);
+                DsToShow.Remove(historyItem);
+                dsToBack.Add(historyItem);
+                break;
+        }
+    }
+
+    [RelayCommand]
+    async Task Done()
+    {
+        await Shell.Current.GoToAsync($"..", new Dictionary<string, object>
+        {
+            { "DSRecover", dsToBack }
+        });
+    }
 }

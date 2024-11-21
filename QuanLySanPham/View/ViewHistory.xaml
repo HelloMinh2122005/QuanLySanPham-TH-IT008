@@ -2,13 +2,75 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuanLySanPham.View.ViewHistory"
-             Title="ViewHistory"
              xmlns:viewmodel="clr-namespace:QuanLySanPham.ViewModel"
+             xmlns:model="clr-namespace:QuanLySanPham.Model"
              x:DataType="viewmodel:ViewHistoryViewModel">
+
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <Grid>
+            <RoundRectangle 
+                Margin="-5, -30, -5, -2"
+                Fill="White"/>
+
+            <VerticalStackLayout Margin="30, 0, 30, 0">
+                <Label FontAttributes="Bold"
+                       FontFamily="bold"
+                       FontSize="Large"
+                       Text="Lịch sử sản phẩm"
+                       HorizontalOptions="Center"/>
+                <Label FontFamily="medium"
+                       Text="Thông tin lịch sử các sản phẩm"
+                       TextColor="Gray"
+                       HorizontalOptions="Center"/>
+
+                <Grid Margin="0, 30, 0, 0" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto" RowSpacing="20">
+                    <Label Grid.Row="0" Text="Số sản phẩm thêm mới" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
+                    <Label Grid.Row="1" Text="{Binding DsSpThem.Count}" FontSize="Medium" TextColor="Black"/>
+                    
+                    <Label Grid.Row="2" Text="Số sản phẩm đã xóa" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
+                    <Label Grid.Row="3" Text="{Binding DsSpXoa.Count}" FontSize="Medium" TextColor="Black"/>
+                    
+                    <Label Grid.Row="4" Text="Số sản phẩm đã sửa" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
+                    <Label Grid.Row="5" Text="{Binding DsSpSua.Count}" FontSize="Medium" TextColor="Black"/>
+                    
+                    <Label Grid.Row="6" Text="Danh sách các sản phẩm thay đổi" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
+                    <CollectionView Grid.Row="7"
+                                    SelectionMode="Single"
+                                    SelectionChangedCommand="{Binding ItemSelectedCommand}"
+                                    SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}"
+                                    ItemsSource="{Binding DsToShow}"
+                                    HeightRequest="250">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:HistoryItem">
+                                <Grid ColumnDefinitions="*, *, *, *, *, *" Padding="10">
+                                    <Border Grid.Column="0" Stroke="LightGray" StrokeThickness="1" Padding="5">
+                                        <Label Text="{Binding SanPham.MaSanPham}" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Border Grid.Column="1" Stroke="LightGray" StrokeThickness="1" Padding="5">
+                                        <Label Text="{Binding SanPham.Ten}" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Border Grid.Column="2" Stroke="LightGray" StrokeThickness="1" Padding="5">
+                                        <Label Text="{Binding SanPham.GiaTien}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Border Grid.Column="3" Stroke="LightGray" StrokeThickness="1" Padding="5">
+                                        <Label Text="{Binding SanPham.SoLuong}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Border Grid.Column="4" Stroke="LightGray" StrokeThickness="1" Padding="5">
+                                        <Label Text="{Binding SanPham.TongTien}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Border Grid.Column="5" Stroke="LightGray" StrokeThickness="1" Padding="5">
+                                        <Label Text="{Binding Action}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+                <HorizontalStackLayout Margin="20, 0, 20, 0" Spacing="10">
+                    <Button Text="Khôi phục" Command="{Binding RecoverCommand}"/>
+                    <Button Text="Hoàn tất" Command="{Binding DoneCommand}"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Grid>
     </VerticalStackLayout>
 </ContentPage>
