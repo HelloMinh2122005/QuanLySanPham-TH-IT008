@@ -275,6 +275,11 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     [RelayCommand]
     async Task ViewHis()
     {
-        await Task.CompletedTask;
+        await Shell.Current.GoToAsync(nameof(ViewHistory), new Dictionary<string, object>
+        {
+            {"DSSPXoa", DsSanPhamXoa },
+            {"DSSPThem", DsSanPhamThem },
+            {"DsSPSua", DsSanPhamSua }
+        });
     }
 }
