@@ -15,8 +15,6 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty]
     private ObservableCollection<SanPham> dsSanPham;
 
-    private SanPham selectedSanPham;
-
     [ObservableProperty]
     string title;
 
@@ -32,8 +30,12 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty]
     int daSua;
 
+    private SanPham selectedSanPham;
     public float GiaTientmp;
     public string UserName;
+    private ObservableCollection<SanPham> DsSanPhamThem;
+    private ObservableCollection<SanPham> DsSanPhamSua;
+    private ObservableCollection<SanPham> DsSanPhamXoa;
 
     public DanhSachSPViewModel()
     {
@@ -44,6 +46,9 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         thanhTien = 0;
         GiaTientmp = 0;
         selectedSanPham = new SanPham();
+        DsSanPhamThem = new ObservableCollection<SanPham>();
+        DsSanPhamSua = new ObservableCollection<SanPham>();
+        DsSanPhamXoa = new ObservableCollection<SanPham>();
     }
 
     private void AddSPifEmpty()
@@ -90,6 +95,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
             DaThem++;
             var newSP = query["add"] as SanPham ?? new SanPham();
             DsSanPham.Add(newSP);
+            DsSanPhamThem.Add(newSP);
             ThanhTien += newSP.TongTien;
             query.Remove("add");
             return;
@@ -101,6 +107,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
             var index = DsSanPham.IndexOf(selectedSanPham);
             selectedSanPham.MaSanPham = "";
             DsSanPham[index] = editSP;
+            DsSanPhamSua.Add(editSP);
             ThanhTien -= GiaTientmp;
             GiaTientmp = 0;
             ThanhTien += editSP.TongTien;
@@ -124,7 +131,15 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
             return;
         }
         ThanhTien -= selectedSanPham.TongTien;
-        DsSanPham.Remove(selectedSanPham);
+        try
+        {
+            DsSanPhamXoa.Add(selectedSanPham);
+            DsSanPham.Remove(selectedSanPham);
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Lỗi", ex.Message, "OK");
+        }
         selectedSanPham.MaSanPham = "";
     }
 

@@ -12,6 +12,7 @@ namespace QuanLySanPham
             Routing.RegisterRoute(nameof(DanhSachSP), typeof(DanhSachSP));
             Routing.RegisterRoute(nameof(AddSanPham), typeof(AddSanPham));
             Routing.RegisterRoute(nameof(EditSanPham), typeof(EditSanPham));
+            Routing.RegisterRoute(nameof(ViewHistory), typeof(ViewHistory));
         }
     }
 }

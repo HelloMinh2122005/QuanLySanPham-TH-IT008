@@ -19,7 +19,7 @@
         <Grid 
           Padding="20"
           RowSpacing="10"
-          RowDefinitions="Auto, *, Auto, Auto, Auto">
+          RowDefinitions="Auto, *, Auto, Auto, Auto, Auto">
 
             <Grid ColumnDefinitions="*, *, *, *, *">
                 <Border Grid.Column="0">
@@ -89,48 +89,49 @@
         </Grid>
 
             <Grid Grid.Row="4"
-              ColumnDefinitions="Auto, 100, Auto"
-              RowDefinitions="Auto, Auto"
+              ColumnDefinitions="*, Auto, 100, Auto, *"
               RowSpacing="10"
               ColumnSpacing="10">
 
                 <Button Text="Thêm"
                     Command="{Binding AddCommand}"
-                    Grid.Column="0"
+                    Grid.Column="1"
                     BackgroundColor="Green"
                     HorizontalOptions="Center"
                     WidthRequest="100"/>
                 <Button Text="Xóa"
                     Command="{Binding DelCommand}"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     BackgroundColor="Red"
                     HorizontalOptions="Center"
                         WidthRequest="100"/>
                 <Button Text="Sửa"
                     Command="{Binding EditCommand}"
-                    Grid.Column="2"
+                    Grid.Column="3"
                     BackgroundColor="BlueViolet"
                     HorizontalOptions="Center"
                         WidthRequest="100"/>
-                <Grid Grid.Row="4"
-                      Grid.Column="1"
-                      ColumnDefinitions="Auto, Auto">
-                    
+
+            </Grid>
+            <Grid Grid.Row="5"
+                  Grid.Column="2"
+                  ColumnDefinitions="*, Auto, Auto, *"
+                  ColumnSpacing="10">
+
                 <Button
-                    Grid.Column="0"
-                    BackgroundColor="LightGray"
-                    TextColor="Black"
-                    Text="Xuất PDF"
-                    WidthRequest="100"/>
-                <Button 
                     Grid.Column="1"
+                    BackgroundColor="LightBlue"
+                    TextColor="Black"
+                    Text="Xem lịch sử chỉnh sửa"
+                    Command="{Binding ViewHisCommand}"
+                    WidthRequest="200"/>
+                <Button 
+                    Grid.Column="2"
                     BackgroundColor="LightGray"
                     TextColor="Black"
                     Text="Xuất PDF"
                     WidthRequest="100"
                     Command="{Binding ExportCommand}"/>
-                </Grid>
-
             </Grid>
         </Grid>
         
