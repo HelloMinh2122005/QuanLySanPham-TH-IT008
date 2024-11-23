@@ -132,9 +132,19 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                     switch (action)
                     {
                         case "Thêm":
-                            DsSanPham.Remove(sanPham);
-                            //DsSanPhamThem.Remove(sanPham);
-                            ThanhTien -= sanPham.TongTien;
+                            var productToRemove = DsSanPham.FirstOrDefault(sp => sp.MaSanPham == sanPham.MaSanPham);
+                            if (productToRemove != null)
+                            {
+                                DsSanPham.Remove(productToRemove);
+                                ThanhTien -= productToRemove.TongTien;
+                            }
+
+                            // Remove from DsSanPhamThem
+                            var productInThem = DsSanPhamThem.FirstOrDefault(sp => sp.MaSanPham == sanPham.MaSanPham);
+                            if (productInThem != null)
+                            {
+                                DsSanPhamThem.Remove(productInThem);
+                            }
                             break;
 
                         case "Sửa":
@@ -144,14 +154,12 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                                 ThanhTien -= existingSP.TongTien;
                                 DsSanPham.Remove(existingSP);
                                 DsSanPham.Add(sanPham);
-                                //DsSanPhamSua.Remove(existingSP);
                                 ThanhTien += sanPham.TongTien;
                             }
                             break;
 
                         case "Xóa":
                             DsSanPham.Add(sanPham);
-                            //DsSanPhamXoa.Remove(sanPham);
                             ThanhTien += sanPham.TongTien;
                             break;
                     }

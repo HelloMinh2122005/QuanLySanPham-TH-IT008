@@ -73,7 +73,13 @@ public partial class ViewHistoryViewModel : ObservableObject, IQueryAttributable
             case "Thêm":
                 dsToBack.Add(selectedSanPham);
                 DsSpThem.Remove(selectedSanPham.SanPham);
-                foreach (var item in DsToShow)
+                var itemsToRemove = DsToShow
+                    .Where (
+                        item => 
+                            item.SanPham.MaSanPham == selectedSanPham.SanPham.MaSanPham 
+                            && item.Action == "Sửa")
+                    .ToList();
+                foreach (var item in itemsToRemove)
                 {
                     if (item.SanPham.MaSanPham == selectedSanPham.SanPham.MaSanPham)
                     {
@@ -83,6 +89,7 @@ public partial class ViewHistoryViewModel : ObservableObject, IQueryAttributable
                 }
                 DsToShow.Remove(selectedSanPham);
                 break;
+
             case "Sửa":
                 dsToBack.Add(selectedSanPham);
                 DsSpSua.Remove(selectedSanPham.SanPham);
