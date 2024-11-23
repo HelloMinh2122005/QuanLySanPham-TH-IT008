@@ -43,13 +43,13 @@ public partial class ViewHistoryViewModel : ObservableObject, IQueryAttributable
             DsSpXoa = (ObservableCollection<SanPham>)query["DSSPXoa"];
 
             foreach (var item in DsSpThem)
-                DsToShow.Add(new HistoryItem { SanPham = item, Action = "Thêm" });
+                DsToShow.Insert(0, new HistoryItem { SanPham = item, Action = "Thêm" });
 
             foreach (var item in DsSpSua)
-                DsToShow.Add(new HistoryItem { SanPham = item, Action = "Sửa" });
+                DsToShow.Insert(0, new HistoryItem { SanPham = item, Action = "Sửa" });
 
             foreach (var item in DsSpXoa)
-                DsToShow.Add(new HistoryItem { SanPham = item, Action = "Xóa" });
+                DsToShow.Insert(0, new HistoryItem { SanPham = item, Action = "Xóa" });
         }
     }
 
@@ -68,25 +68,30 @@ public partial class ViewHistoryViewModel : ObservableObject, IQueryAttributable
             return;
         }
 
-        var historyItem = DsToShow.FirstOrDefault(x => x.SanPham == selectedSanPham.SanPham);
-        if (historyItem == null) return;
-
-        switch (historyItem.Action)
+        switch (selectedSanPham.Action)
         {
             case "Thêm":
+                dsToBack.Add(selectedSanPham);
                 DsSpThem.Remove(selectedSanPham.SanPham);
-                DsToShow.Remove(historyItem);
-                dsToBack.Add(historyItem);
+                foreach (var item in DsToShow)
+                {
+                    if (item.SanPham.MaSanPham == selectedSanPham.SanPham.MaSanPham)
+                    {
+                        DsSpSua.Remove(item.SanPham);
+                        DsToShow.Remove(item);
+                    }
+                }
+                DsToShow.Remove(selectedSanPham);
                 break;
             case "Sửa":
+                dsToBack.Add(selectedSanPham);
                 DsSpSua.Remove(selectedSanPham.SanPham);
-                DsToShow.Remove(historyItem);
-                dsToBack.Add(historyItem);
+                DsToShow.Remove(selectedSanPham);
                 break;
             case "Xóa":
+                dsToBack.Add(selectedSanPham);
                 DsSpXoa.Remove(selectedSanPham.SanPham);
-                DsToShow.Remove(historyItem);
-                dsToBack.Add(historyItem);
+                DsToShow.Remove(selectedSanPham);
                 break;
         }
     }

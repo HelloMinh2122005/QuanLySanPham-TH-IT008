@@ -103,21 +103,25 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         if (query.ContainsKey("edit"))
         {
             DaSua++;
-            var editSP = query["edit"] as SanPham ?? new SanPham();
-            var index = DsSanPham.IndexOf(selectedSanPham);
-            DsSanPham[index] = editSP;
-            DsSanPhamSua.Add(editSP);
-            ThanhTien -= GiaTientmp;
-            GiaTientmp = 0;
-            ThanhTien += editSP.TongTien;
-            if(selectedSanPham != null)
-                selectedSanPham.MaSanPham = "";
+            var editedSP = query["edit"] as SanPham ?? new SanPham();
+
+            var existingSP = DsSanPham.FirstOrDefault(sp => sp.MaSanPham == editedSP.MaSanPham);
+            if (existingSP != null)
+            {
+                ThanhTien -= existingSP.TongTien;
+                ThanhTien += editedSP.TongTien;
+
+                var index = DsSanPham.IndexOf(existingSP);
+                DsSanPham[index] = editedSP;
+            }
+
             query.Remove("edit");
+            selectedSanPham = null;
             return;
         }
         if (query.ContainsKey("DSRecover"))
         {
-            var dsToRecover = query["DSRecover"] as ObservableCollection<HistoryItem>;
+            var dsToRecover = query["DSRecover"] as ObservableCollection<HistoryItem>; //
             if (dsToRecover != null)
             {
                 foreach (var historyItem in dsToRecover)
@@ -129,7 +133,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                     {
                         case "Thêm":
                             DsSanPham.Remove(sanPham);
-                            DsSanPhamThem.Remove(sanPham);
+                            //DsSanPhamThem.Remove(sanPham);
                             ThanhTien -= sanPham.TongTien;
                             break;
 
@@ -140,14 +144,14 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                                 ThanhTien -= existingSP.TongTien;
                                 DsSanPham.Remove(existingSP);
                                 DsSanPham.Add(sanPham);
-                                DsSanPhamSua.Remove(existingSP);
+                                //DsSanPhamSua.Remove(existingSP);
                                 ThanhTien += sanPham.TongTien;
                             }
                             break;
 
                         case "Xóa":
                             DsSanPham.Add(sanPham);
-                            DsSanPhamXoa.Remove(sanPham);
+                            //DsSanPhamXoa.Remove(sanPham);
                             ThanhTien += sanPham.TongTien;
                             break;
                     }
@@ -165,7 +169,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     [RelayCommand]
     async Task Del()
     {
-        if (selectedSanPham == null || selectedSanPham.MaSanPham == "")
+        if (selectedSanPham == null || string.IsNullOrWhiteSpace(selectedSanPham.MaSanPham))
         {
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng chọn sản phẩm để xóa", "OK");
             return;
@@ -180,8 +184,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         {
             await Shell.Current.DisplayAlert("Lỗi", ex.Message, "OK");
         }
-        if (selectedSanPham != null)
-            selectedSanPham.MaSanPham = "";
+        selectedSanPham = null;
     }
 
     [RelayCommand]
@@ -192,9 +195,26 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng chọn sản phẩm để sửa", "OK");
             return;
         }
+
+        SanPham sanPhamCopy = new SanPham 
+        { 
+            MaSanPham = selectedSanPham.MaSanPham,
+            Ten = selectedSanPham.Ten,
+            SoLuong = selectedSanPham.SoLuong,
+            GiaTien = selectedSanPham.GiaTien
+        };
+
+        DsSanPhamSua.Add(new SanPham
+        {
+            MaSanPham = selectedSanPham.MaSanPham,
+            Ten = selectedSanPham.Ten,
+            SoLuong = selectedSanPham.SoLuong,
+            GiaTien = selectedSanPham.GiaTien
+        });
+
         await Shell.Current.GoToAsync(nameof(EditSanPham), new Dictionary<string, object>
         {
-            {"sanphamPara", selectedSanPham }
+            {"sanphamPara", sanPhamCopy }
         });
 
         GiaTientmp = selectedSanPham.TongTien;
@@ -314,7 +334,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     }
 
     [RelayCommand]
-    async Task ViewHis()
+    async Task ViewHis() 
     {
         await Shell.Current.GoToAsync(nameof(ViewHistory), new Dictionary<string, object>
         {

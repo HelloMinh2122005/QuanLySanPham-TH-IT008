@@ -19,7 +19,14 @@ public partial class EditSanPhamViewModel : ObservableObject, IQueryAttributable
     {
         if (query.ContainsKey("sanphamPara"))
         {
-            Sanpham = (SanPham)query["sanphamPara"];
+            var originalSanPham = (SanPham)query["sanphamPara"];
+            Sanpham = new SanPham
+            {
+                MaSanPham = originalSanPham.MaSanPham,
+                Ten = originalSanPham.Ten,
+                SoLuong = originalSanPham.SoLuong,
+                GiaTien = originalSanPham.GiaTien
+            };
         }
     }
 
@@ -31,12 +38,12 @@ public partial class EditSanPhamViewModel : ObservableObject, IQueryAttributable
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng tên sản phẩm", "OK");
             return;
         }
-        if (Sanpham.GiaTien == 0)
+        if (Sanpham.GiaTien <= 0)
         {
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng nhập đơn giá sản phẩm", "OK");
             return;
         }
-        if (Sanpham.SoLuong == 0)
+        if (Sanpham.SoLuong <= 0)
         {
             await Shell.Current.DisplayAlert("Thông báo", "Vui lòng số lượng sản phẩm", "OK");
             return;
