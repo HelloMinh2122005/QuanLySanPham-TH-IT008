@@ -44,7 +44,7 @@
                         SelectionChangedCommand="{Binding SelectCommand}"
                         SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}"
                         ItemsSource="{Binding DsSanPham}"
-                        HeightRequest="400">
+                        HeightRequest="430">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                         <Grid ColumnDefinitions="*, *, *, *, *"
@@ -77,15 +77,11 @@
 
         <Grid Grid.Row="3"
               ColumnDefinitions="200, *"
-              RowDefinitions="Auto, Auto, Auto, Auto">
-                <Label Text="Số sản phẩm đã thêm mới: " FontAttributes="Bold" FontSize="15"/>
-                <Label Grid.Column="1" Text="{Binding DaThem}" FontSize="15"/>
-                <Label Grid.Row="1" Text="Số sản phẩm đã chỉnh sửa: " FontAttributes="Bold" FontSize="15"/>
-                <Label Grid.Row="1" Grid.Column="1" Text="{Binding DaSua}" FontSize="15"/>
-                <Label Grid.Row="2" Text="Tổng số sản phẩm: " FontAttributes="Bold" FontSize="15"/>
-                <Label Grid.Row="2" Grid.Column="1" Text="{Binding DsSanPham.Count}" FontSize="15"/>
-                <Label Grid.Row="3" Text="Thành tiền: " FontAttributes="Bold" FontSize="20"/>
-                <Label Grid.Row="3" Grid.Column="1" Text="{Binding ThanhTien}" FontSize="20"/>
+              RowDefinitions="Auto, Auto">
+                <Label Grid.Row="0" Text="Tổng số sản phẩm: " FontAttributes="Bold" FontSize="15"/>
+                <Label Grid.Row="0" Grid.Column="1" Text="{Binding DsSanPham.Count}" FontSize="15"/>
+                <Label Grid.Row="1" Text="Thành tiền: " FontAttributes="Bold" FontSize="20"/>
+                <Label Grid.Row="1" Grid.Column="1" Text="{Binding ThanhTien}" FontSize="20"/>
         </Grid>
 
             <Grid Grid.Row="4"
