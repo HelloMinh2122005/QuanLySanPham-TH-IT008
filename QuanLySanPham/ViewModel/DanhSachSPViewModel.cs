@@ -245,8 +245,6 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         selectedSanPham = selectedSP;
     }
 
-    // ...
-
     [RelayCommand]
     public async Task Export()
     {
