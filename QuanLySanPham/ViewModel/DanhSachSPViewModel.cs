@@ -65,7 +65,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         );
     }
 
-    void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
+    async void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (query.ContainsKey("nochange"))
         {
@@ -87,6 +87,26 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         {
             Stt++;
             var newSP = query["add"] as SanPham ?? new SanPham();
+            var existingSP = DsSanPham.FirstOrDefault(sp => sp.MaSanPham == newSP.MaSanPham);
+            if (existingSP != null)
+            {
+                if (existingSP != null)
+                {
+                    bool update = await Shell.Current.DisplayAlert("Thông báo", "Sản phẩm này đã tồn tại trong danh sách, bạn có muốn cập nhật lại thông tin không?", "Có", "Không");
+                    if (update)
+                    {
+                        ThanhTien -= existingSP.TongTien;
+                        ThanhTien += newSP.TongTien;
+
+                        DsSanPhamThem.Add(newSP);
+                        var index = DsSanPham.IndexOf(existingSP);
+                        DsSanPham[index] = newSP;
+                    } 
+                    query.Remove("add");
+                    return;
+                }
+
+            }
             DsSanPham.Add(newSP);
             DsSanPhamThem.Add(newSP);
             ThanhTien += newSP.TongTien;
