@@ -5,8 +5,6 @@ using QuanLySanPham.Model;
 using QuanLySanPham.View;
 using System.Collections.ObjectModel;
 using Aspose.Cells;
-using static iText.StyledXmlParser.Jsoup.Select.NodeFilter;
-using System.IO;
 
 
 namespace QuanLySanPham.ViewModel;
@@ -248,6 +246,13 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     [RelayCommand]
     public async Task Export()
     {
+        bool userCancelled = await AllowUserToCancelAsync();
+        if (userCancelled)
+        {
+            await Shell.Current.DisplayAlert("Thông báo", "Bạn đã hủy lưu file.", "OK");
+            return;
+        }
+
         var finalRes = new FinalRes
         {
             TenNguoiTao = UserName,
@@ -350,7 +355,9 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
 
             while (!fileSaved)
             {
-                var fileSaverResult = await FileSaver.Default.SaveAsync(fileName, stream);
+                var fileSaverResultTask = FileSaver.Default.SaveAsync(fileName, stream);
+
+                var fileSaverResult = await fileSaverResultTask;
 
                 if (fileSaverResult.IsSuccessful)
                 {
@@ -378,6 +385,20 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         {
             await Shell.Current.DisplayAlert("Lỗi", $"Có lỗi xảy ra trong quá trình xuất file: {ex.Message}", "OK");
         }
+    }
+
+    async Task<bool> AllowUserToCancelAsync()
+    {
+        bool userCancelled = false;
+
+        var cancellationTask = Shell.Current.DisplayAlert("Thông báo", "File đang được lưu...", "", "Hủy");
+
+        if (await Task.WhenAny(cancellationTask, Task.Delay(3000)) == cancellationTask)
+        {
+            userCancelled = await cancellationTask == false; 
+        }
+
+        return userCancelled;
     }
 
     [RelayCommand]
