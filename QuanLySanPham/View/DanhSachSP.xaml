@@ -6,7 +6,8 @@
              x:DataType="viewmodel:DanhSachSPViewModel"
              xmlns:model="clr-namespace:QuanLySanPham.Model">
 
-    <VerticalStackLayout Spacing="5" Margin="10,10,10,10">
+
+    <VerticalStackLayout Spacing="10" Margin="15,10,15,10">
 
         <Label
             Text="Danh sách sản phẩm"
@@ -16,120 +17,155 @@
             FontAttributes="Bold"
             FontSize="Large"/>
 
+        <Grid ColumnDefinitions="Auto, *, Auto, *, Auto, *, Auto, *, Auto, *, Auto"
+              BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+            
+            <BoxView
+                WidthRequest="1"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray100}}" 
+                Grid.Column="0"/>
+            
+            <Label Grid.Column="1" 
+                   Text="ID" 
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+            <BoxView
+                WidthRequest="1"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray100}}" 
+                Grid.Column="2"/>
+
+            <Label Grid.Column="3" 
+                   Text="Tên" 
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+            
+            <BoxView
+                WidthRequest="1"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray100}}" 
+                Grid.Column="4"/>
+            
+            <Label Grid.Column="5" 
+                   Text="Đơn giá" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+            
+            <BoxView
+                WidthRequest="1"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray100}}" 
+                Grid.Column="6"/>
+            
+            <Label Grid.Column="7" 
+                   Text="Số lượng" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+            
+            <BoxView
+                WidthRequest="1"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray100}}" 
+                Grid.Column="8"/>   
+            
+            <Label Grid.Column="9" 
+                   Text="Thành tiền" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+            
+            <BoxView
+                WidthRequest="1"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray100}}" 
+                Grid.Column="10"/>       
+        </Grid>
+        
         <Grid 
-          Padding="20"
           RowSpacing="10"
-          RowDefinitions="Auto, *, Auto, Auto, Auto, Auto">
+          RowDefinitions="Auto, *, Auto, Auto">
 
-            <Grid ColumnDefinitions="*, *, *, *, *">
-                <Border Grid.Column="0">
-                    <Label Text="Mã sản phẩm" FontAttributes="Bold"/>
-                </Border>
-                <Border Grid.Column="1">
-                    <Label Text="Tên sản phẩm" FontAttributes="Bold"/>
-                </Border>
-                <Border Grid.Column="2">
-                    <Label Text="Đơn giá" FontAttributes="Bold" HorizontalOptions="Center"/>
-                </Border>
-                <Border Grid.Column="3">
-                    <Label Text="Số lượng" FontAttributes="Bold" HorizontalOptions="Center"/>
-                </Border>
-                <Border Grid.Column="4">
-                    <Label Text="Thành tiền" FontAttributes="Bold" HorizontalOptions="Center"/>
-                </Border>
-            </Grid>
-
-        <CollectionView Grid.Row="1"
+            <CollectionView Grid.Row="1"
                         SelectionMode="Single"
                         SelectionChangedCommand="{Binding SelectCommand}"
                         SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}"
                         ItemsSource="{Binding DsSanPham}"
                         HeightRequest="430">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
                         <Grid ColumnDefinitions="*, *, *, *, *"
-                              x:DataType="model:SanPham">
-                        <Border Grid.Column="0">
-                            <Label Text="{Binding MaSanPham}"/>
-                        </Border>
-                        <Border Grid.Column="1">
-                            <Label Text="{Binding Ten}" />
-                        </Border>
-                        <Border Grid.Column="2">
-                            <Label Text="{Binding GiaTien}" HorizontalOptions="Center"/>
-                        </Border>
-                        <Border Grid.Column="3">
-                            <Label Text="{Binding SoLuong}" HorizontalOptions="Center"/>
-                        </Border>
-                        <Border Grid.Column="4">
-                            <Label Text="{Binding TongTien}" HorizontalOptions="Center"/>
-                        </Border>
+                              x:DataType="model:SanPham"
+                              Padding="0, 2">
+                            <Label HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0" Text="{Binding MaSanPham}"/>
+                            <Label HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="1" Text="{Binding Ten}" />
+                            <Label HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="2" Text="{Binding GiaTien}"/>
+                            <Label HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="3" Text="{Binding SoLuong}"/>
+                            <Label HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="4" Text="{Binding TongTien}"/>
                         </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
 
             <VerticalStackLayout Grid.Row="2" HeightRequest="10">
-                
-            </VerticalStackLayout>
-        
 
-        <Grid Grid.Row="3"
+            </VerticalStackLayout>
+
+
+            <Grid Grid.Row="3"
               ColumnDefinitions="200, *"
               RowDefinitions="Auto, Auto">
                 <Label Grid.Row="0" Text="Tổng số sản phẩm: " FontAttributes="Bold" FontSize="15"/>
                 <Label Grid.Row="0" Grid.Column="1" Text="{Binding DsSanPham.Count}" FontSize="15"/>
                 <Label Grid.Row="1" Text="Thành tiền: " FontAttributes="Bold" FontSize="20"/>
                 <Label Grid.Row="1" Grid.Column="1" Text="{Binding ThanhTien}" FontSize="20"/>
-        </Grid>
+            </Grid>
 
-            <Grid Grid.Row="4"
-              ColumnDefinitions="*, Auto, 100, Auto, *"
-              RowSpacing="10"
-              ColumnSpacing="10">
+        </Grid>
+            <Grid 
+            ColumnDefinitions="*, Auto, 100, Auto, *"
+            RowSpacing="10"
+            ColumnSpacing="10">
 
                 <Button Text="Thêm"
-                    Command="{Binding AddCommand}"
-                    Grid.Column="1"
-                    BackgroundColor="Green"
-                    HorizontalOptions="Center"
-                    WidthRequest="100"/>
+                Command="{Binding AddCommand}"
+                Grid.Column="1"
+                BackgroundColor="Green"
+                HorizontalOptions="Center"
+                WidthRequest="100"/>
                 <Button Text="Xóa"
-                    Command="{Binding DelCommand}"
-                    Grid.Column="2"
-                    BackgroundColor="Red"
-                    HorizontalOptions="Center"
-                        WidthRequest="100"/>
+                Command="{Binding DelCommand}"
+                Grid.Column="2"
+                BackgroundColor="Red"
+                HorizontalOptions="Center"
+                    WidthRequest="100"/>
                 <Button Text="Sửa"
-                    Command="{Binding EditCommand}"
-                    Grid.Column="3"
-                    BackgroundColor="BlueViolet"
-                    HorizontalOptions="Center"
-                        WidthRequest="100"/>
+                Command="{Binding EditCommand}"
+                Grid.Column="3"
+                BackgroundColor="BlueViolet"
+                HorizontalOptions="Center"
+                    WidthRequest="100"/>
 
             </Grid>
-            <Grid Grid.Row="5"
-                  Grid.Column="2"
-                  ColumnDefinitions="*, Auto, Auto, *"
-                  ColumnSpacing="10">
+            <Grid 
+                Grid.Column="2"
+                ColumnDefinitions="*, Auto, Auto, *"
+                ColumnSpacing="10">
 
                 <Button
-                    Grid.Column="1"
-                    BackgroundColor="LightBlue"
-                    TextColor="Black"
-                    Text="Xem lịch sử chỉnh sửa"
-                    Command="{Binding ViewHisCommand}"
-                    WidthRequest="200"/>
+                Grid.Column="1"
+                BackgroundColor="LightBlue"
+                TextColor="Black"
+                Text="Xem lịch sử chỉnh sửa"
+                Command="{Binding ViewHisCommand}"
+                WidthRequest="200"/>
                 <Button 
-                    Grid.Column="2"
-                    BackgroundColor="LightGray"
-                    TextColor="Black"
-                    Text="Xuất PDF"
-                    WidthRequest="100"
-                    Command="{Binding ExportCommand}"/>
+                Grid.Column="2"
+                BackgroundColor="LightGray"
+                TextColor="Black"
+                Text="Xuất PDF"
+                WidthRequest="100"
+                Command="{Binding ExportCommand}"/>
             </Grid>
-        </Grid>
-        
+
     </VerticalStackLayout>
 </ContentPage>
