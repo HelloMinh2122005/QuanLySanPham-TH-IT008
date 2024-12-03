@@ -26,4 +26,11 @@ public partial class LoginViewModel : ObservableObject
             {"UserName", Username }
         });
     }
+
+
+    [RelayCommand]
+    async Task OnEntryCompleted()
+    {
+        await Continue();
+    }
 }
