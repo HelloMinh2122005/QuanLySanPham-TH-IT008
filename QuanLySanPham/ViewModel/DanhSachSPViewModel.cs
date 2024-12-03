@@ -96,7 +96,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                         ThanhTien -= existingSP.TongTien;
                         ThanhTien += newSP.TongTien;
 
-                        DsSanPhamThem.Add(newSP);
+                        DsSanPhamThem.Insert(0, newSP);
                         var index = DsSanPham.IndexOf(existingSP);
                         DsSanPham[index] = newSP;
                     } 
@@ -246,7 +246,8 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     [RelayCommand]
     public async Task Export()
     {
-        bool userCancelled = await AllowUserToCancelAsync();
+        var cts = new CancellationTokenSource();
+        var userCancelled = await AllowUserToCancelAsync(cts.Token);
         if (userCancelled)
         {
             await Shell.Current.DisplayAlert("Thông báo", "Bạn đã hủy lưu file.", "OK");
@@ -385,17 +386,21 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         {
             await Shell.Current.DisplayAlert("Lỗi", $"Có lỗi xảy ra trong quá trình xuất file: {ex.Message}", "OK");
         }
+        finally
+        {
+            cts.Cancel(); // Cancel the alert if the file-saving process starts
+        }
     }
 
-    async Task<bool> AllowUserToCancelAsync()
+    async Task<bool> AllowUserToCancelAsync(CancellationToken token)
     {
         bool userCancelled = false;
 
         var cancellationTask = Shell.Current.DisplayAlert("Thông báo", "File đang được lưu...", "", "Hủy");
 
-        if (await Task.WhenAny(cancellationTask, Task.Delay(3000)) == cancellationTask)
+        if (await Task.WhenAny(cancellationTask, Task.Delay(3000, token)) == cancellationTask)
         {
-            userCancelled = await cancellationTask == false; 
+            userCancelled = await cancellationTask == false;
         }
 
         return userCancelled;
