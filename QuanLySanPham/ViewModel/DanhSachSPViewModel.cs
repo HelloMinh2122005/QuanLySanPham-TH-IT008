@@ -96,7 +96,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                         ThanhTien -= existingSP.TongTien;
                         ThanhTien += newSP.TongTien;
 
-                        DsSanPhamThem.Insert(0, newSP);
+                        DsSanPhamThem.Add(newSP);
                         var index = DsSanPham.IndexOf(existingSP);
                         DsSanPham[index] = newSP;
                     } 
