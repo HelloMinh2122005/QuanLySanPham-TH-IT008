@@ -132,6 +132,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         if (query.ContainsKey("DSRecover"))
         {
             var dsToRecover = query["DSRecover"] as ObservableCollection<HistoryItem>; //
+            query.Remove("DSRecover");
             if (dsToRecover != null)
             {
                 foreach (var historyItem in dsToRecover)

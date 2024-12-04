@@ -42,7 +42,7 @@
                     <Entry Grid.Row="5" 
                            x:Name="EntryGiaTien"
                            ReturnType="Next"
-                            toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference EntrySoLuong}"
+                           toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference EntrySoLuong}"
                            Text="{Binding GiaTien}" 
                            Placeholder="Nhập đơn giá"/>
                     <Label Grid.Row="6" Text="Nhập số lượng" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>

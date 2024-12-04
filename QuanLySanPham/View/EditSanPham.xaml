@@ -3,12 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuanLySanPham.View.EditSanPham"
              xmlns:viewmodel="clr-namespace:QuanLySanPham.ViewModel"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="viewmodel:EditSanPhamViewModel">
 
     <VerticalStackLayout>
         <Grid>
             <RoundRectangle 
-                Margin="-5, -30, -5, -2"/>
+                Margin="-5, -30, -5, -2"
+                Fill="White"/>
 
             <VerticalStackLayout Margin="30, 0, 30, 0">
                 <Label FontAttributes="Bold"
@@ -23,17 +25,34 @@
 
                 <Grid Margin="0, 30, 0, 0" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto" RowSpacing="20">
                     <Label Grid.Row="0" Text="Mã sản phẩm" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
-                    <Entry Grid.Row="1" Text="{Binding Sanpham.MaSanPham}" IsReadOnly="True" Placeholder="Nhập mã sản phẩm">
+                    <Entry Grid.Row="1" 
+                           x:Name="EntryMaSanPham"
+                           Text="{Binding Sanpham.MaSanPham}" 
+                           IsReadOnly="True" 
+                           Placeholder="Nhập mã sản phẩm">
                         <Entry.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding EntryTappedCommand}" />
                         </Entry.GestureRecognizers>
                     </Entry>
                     <Label Grid.Row="2" Text="Nhập tên sản phẩm" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
-                    <Entry Grid.Row="3" Text="{Binding Sanpham.Ten}" Placeholder="Nhập tên sản phẩm"/>
+                    <Entry Grid.Row="3" 
+                           x:Name="EntryTen"
+                           Text="{Binding Sanpham.Ten}" 
+                           Placeholder="Nhập tên sản phẩm"
+                           ReturnType="Next"
+                           toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference EntryGiaTien}"/>
                     <Label Grid.Row="4" Text="Nhập đơn giá" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
-                    <Entry Grid.Row="5" Text="{Binding Sanpham.GiaTien}" Placeholder="Nhập đơn giá"/>
+                    <Entry Grid.Row="5" 
+                           x:Name="EntryGiaTien"
+                           Text="{Binding Sanpham.GiaTien}" 
+                           Placeholder="Nhập đơn giá"
+                           ReturnType="Next"
+                           toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference EntrySoLuong}"/>
                     <Label Grid.Row="6" Text="Nhập số lượng" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
-                    <Entry Grid.Row="7" Text="{Binding Sanpham.SoLuong}" Placeholder="Nhập số lượng"/>
+                    <Entry Grid.Row="7" 
+                           x:Name="EntrySoLuong"
+                           Text="{Binding Sanpham.SoLuong}" 
+                           Placeholder="Nhập số lượng"/>
 
                     <Grid Grid.Row="8"
                           ColumnDefinitions="*, *"
