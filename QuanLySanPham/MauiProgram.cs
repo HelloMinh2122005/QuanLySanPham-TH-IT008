@@ -24,6 +24,7 @@ namespace QuanLySanPham
     		builder.Logging.AddDebug();
 #endif
             builder.Services.AddSingleton<SanPham>();
+            builder.Services.AddSingleton<HoaDon>();
             builder.Services.AddSingleton<HistoryItem>();
 
             builder.Services.AddSingleton<Login>();

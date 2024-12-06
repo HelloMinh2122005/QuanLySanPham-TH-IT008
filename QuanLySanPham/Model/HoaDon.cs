@@ -1,9 +1,8 @@
-﻿
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 namespace QuanLySanPham.Model;
 
-public class FinalRes
+public class HoaDon
 {
     public string TenNguoiTao { get; set; } = "";
     public DateTime NgayTao { get; set; } = DateTime.Now;
