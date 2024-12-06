@@ -13,69 +13,182 @@ namespace QuanLySanPham.Services
 {
     public partial class FileService
     {
-        /// <summary>
-        /// Thực thi một thao tác không đồng bộ với popup chờ xử lý và hỗ trợ hủy bỏ.
-        /// </summary>
-        private async Task ExecuteWithPopupAsync(
-            Func<CancellationToken, Task> operation,
-            string successMessage,
-            string cancelMessage,
-            string errorMessage)
+        public async Task<string> Import(string DataPath, string UserName)
         {
-            var cts = new CancellationTokenSource();
-            var popup = new WaitPopup(cts.Cancel);
-
-            // Hiển thị popup
-            await Shell.Current.CurrentPage.ShowPopupAsync(popup);
-
-            try
+            var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
             {
-                // Thực thi thao tác với CancellationToken
-                await operation(cts.Token);
+                { DevicePlatform.iOS, new[] { "com.microsoft.excel.xls", "org.openxmlformats.spreadsheetml.sheet" } },
+                { DevicePlatform.Android, new[] { "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" } },
+                { DevicePlatform.WinUI, new[] { ".xls", ".xlsx" } },
+                { DevicePlatform.MacCatalyst, new[] { "com.microsoft.excel.xls", "org.openxmlformats.spreadsheetml.sheet" } }
+            });
 
-                if (!cts.IsCancellationRequested)
+            var file = await FilePicker.PickAsync(new PickOptions
+            {
+                PickerTitle = "Chọn file Excel",
+                FileTypes = customFileType
+            });
+
+            if (file != null)
+            {
+                try
                 {
-                    // Đóng popup khi hoàn thành thành công
-                    await popup.CloseAsync();
+                    DataPath = file.FullPath;
+                    using var stream = await file.OpenReadAsync();
+                    Workbook workbook = new Workbook(stream);
+                    Worksheet worksheet = workbook.Worksheets[0];
 
-                    if (!string.IsNullOrEmpty(successMessage))
-                        await Shell.Current.DisplayAlert("Thông báo", successMessage, "OK");
+                    ObservableCollection<SanPham> DsSanPham = new ObservableCollection<SanPham>();
+                    for (int i = 1; i <= worksheet.Cells.MaxDataRow; i++)
+                    {
+                        var maSanPham = worksheet.Cells[i, 0].StringValue;
+                        var tenSanPham = worksheet.Cells[i, 1].StringValue;
+                        var soLuong = worksheet.Cells[i, 2].IntValue;
+                        var giaTien = worksheet.Cells[i, 3].FloatValue;
+
+                        DsSanPham.Add(new SanPham
+                        {
+                            MaSanPham = maSanPham,
+                            Ten = tenSanPham,
+                            SoLuong = soLuong,
+                            GiaTien = giaTien
+                        });
+                    }
+
+                    await Shell.Current.DisplayAlert("Thông báo", "Nhập file thành công", "OK");
+
+                    await Shell.Current.GoToAsync(nameof(DanhSachSP), new Dictionary<string, object>
+                    {
+                        { "DsSanPham", DsSanPham },
+                        { "UserName", UserName }
+                    });
+
+                    return DataPath;
+                }
+                catch (Exception ex)
+                {
+                    await Shell.Current.DisplayAlert("Error", $"An error occurred while reading the Excel file: {ex.Message}", "OK");
                 }
             }
-            catch (OperationCanceledException)
-            {
-                // Xử lý khi người dùng hủy bỏ
-                await popup.CloseAsync();
 
-                if (!string.IsNullOrEmpty(cancelMessage))
-                    await Shell.Current.DisplayAlert("Thông báo", cancelMessage, "OK");
-            }
-            catch (Exception ex)
-            {
-                // Xử lý các ngoại lệ khác
-                await popup.CloseAsync();
-
-                if (!string.IsNullOrEmpty(errorMessage))
-                    await Shell.Current.DisplayAlert("Lỗi", $"{errorMessage}: {ex.Message}", "OK");
-            }
-            finally
-            {
-                cts.Dispose();
-            }
+            return DataPath;
         }
 
-        /// <summary>
-        /// Xuất dữ liệu ra file PDF với hỗ trợ hủy bỏ.
-        /// </summary>
-        public async Task Export(string userName, float totalAmount, ObservableCollection<SanPham> products)
+        public async Task CreateNewFile()
         {
-            Func<CancellationToken, Task> exportOperation = async (token) =>
+            try
             {
-                // Khởi tạo Workbook
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Thiết lập cột và tiêu đề
+                // Set column widths for a cleaner layout
+                worksheet.Cells.SetColumnWidth(0, 20);
+                worksheet.Cells.SetColumnWidth(1, 20);
+                worksheet.Cells.SetColumnWidth(2, 12);
+                worksheet.Cells.SetColumnWidth(3, 12);
+
+                // Table headers
+                worksheet.Cells[0, 0].PutValue("Mã sản phẩm");
+                worksheet.Cells[0, 1].PutValue("Tên sản phẩm");
+                worksheet.Cells[0, 2].PutValue("Số lượng");
+                worksheet.Cells[0, 3].PutValue("Giá tiền");
+
+                // Apply bold style for headers
+                var headerStyle = workbook.CreateStyle();
+                headerStyle.Font.IsBold = true;
+                headerStyle.ForegroundColor = System.Drawing.Color.LightGray;
+                headerStyle.Pattern = BackgroundType.Solid;
+                headerStyle.HorizontalAlignment = TextAlignmentType.Center;
+
+                for (int j = 0; j <= 3; j++)
+                {
+                    worksheet.Cells[0, j].SetStyle(headerStyle);
+                }
+
+                // Apply border style to the table headers
+                var borderStyle = workbook.CreateStyle();
+                borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                borderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                borderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+
+                for (int j = 0; j <= 3; j++)
+                {
+                    worksheet.Cells[0, j].SetStyle(borderStyle);
+                }
+
+                // Save the workbook to a MemoryStream
+                using var stream = new MemoryStream();
+                workbook.Save(stream, SaveFormat.Xlsx);
+                stream.Seek(0, SeekOrigin.Begin);
+
+                // Use FileSaver to save the file to the user's chosen location
+                var baseFileName = "input";
+                var extension = ".xlsx";
+                var fileName = baseFileName + extension;
+                bool fileSaved = false;
+                int fileIndex = 0;
+
+                while (!fileSaved)
+                {
+                    var fileSaverResultTask = FileSaver.Default.SaveAsync(fileName, stream);
+
+                    var fileSaverResult = await fileSaverResultTask;
+
+                    if (fileSaverResult.IsSuccessful)
+                    {
+                        fileSaved = true;
+                        await Shell.Current.DisplayAlert("Thông báo", "Tạo file thành công", "OK");
+                    }
+                    else if (fileSaverResult.Exception is IOException)
+                    {
+                        // Handle file name conflict by appending a number
+                        fileIndex++;
+                        fileName = $"{baseFileName}({fileIndex}){extension}";
+                        stream.Seek(0, SeekOrigin.Begin);
+                    }
+                    else if (fileSaverResult.Exception != null)
+                    {
+                        throw fileSaverResult.Exception;
+                    }
+                    else
+                    {
+                        await Shell.Current.DisplayAlert("Thông báo", "Bạn đã hủy lưu file.", "OK");
+                        return;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", $"An error occurred while creating the Excel file: {ex.Message}", "OK");
+            }
+        }
+
+
+        public async Task Export(string UserName, float ThanhTien, ObservableCollection<SanPham> DsSanPham)
+        {
+            var cts = new CancellationTokenSource();
+            var userCancelled = await AllowUserToCancelAsync(cts.Token);
+            if (userCancelled)
+            {
+                await Shell.Current.DisplayAlert("Thông báo", "Bạn đã hủy lưu file.", "OK");
+                return;
+            }
+
+            var hoaDon = new HoaDon
+            {
+                TenNguoiTao = UserName,
+                NgayTao = DateTime.Now,
+                TongTien = ThanhTien,
+                DsSanPham = DsSanPham
+            };
+
+            try
+            {
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Set up worksheet columns and headers
                 worksheet.Cells.SetColumnWidth(0, 5);
                 worksheet.Cells.SetColumnWidth(1, 20);
                 worksheet.Cells.SetColumnWidth(2, 20);
@@ -84,11 +197,11 @@ namespace QuanLySanPham.Services
                 worksheet.Cells.SetColumnWidth(5, 15);
 
                 worksheet.Cells[0, 1].PutValue("Tên người tạo:");
-                worksheet.Cells[0, 2].PutValue(userName);
+                worksheet.Cells[0, 2].PutValue(hoaDon.TenNguoiTao);
                 worksheet.Cells[1, 1].PutValue("Ngày tạo:");
-                worksheet.Cells[1, 2].PutValue(DateTime.Now.ToString("dd/MM/yyyy"));
+                worksheet.Cells[1, 2].PutValue(hoaDon.NgayTao.ToString("dd/MM/yyyy"));
                 worksheet.Cells[2, 1].PutValue("Tổng giá trị hóa đơn:");
-                worksheet.Cells[2, 2].PutValue(totalAmount.ToString());
+                worksheet.Cells[2, 2].PutValue(hoaDon.TongTien.ToString());
                 worksheet.Cells[2, 3].PutValue("Đơn vị: VNĐ");
 
                 worksheet.Cells[4, 0].PutValue("STT");
@@ -99,36 +212,33 @@ namespace QuanLySanPham.Services
                 worksheet.Cells[4, 5].PutValue("Tổng tiền");
 
                 int rowIndex = 5;
-                int stt = 1;
-                foreach (var sp in products)
+                foreach (var sp in hoaDon.DsSanPham)
                 {
-                    token.ThrowIfCancellationRequested();
-
-                    worksheet.Cells[rowIndex, 0].PutValue(stt++);
+                    int valStt = rowIndex - 4;
+                    worksheet.Cells[rowIndex, 0].PutValue(valStt.ToString());
                     worksheet.Cells[rowIndex, 1].PutValue(sp.MaSanPham);
                     worksheet.Cells[rowIndex, 2].PutValue(sp.Ten);
                     worksheet.Cells[rowIndex, 3].PutValue(sp.SoLuong.ToString());
                     worksheet.Cells[rowIndex, 4].PutValue(sp.GiaTien.ToString());
                     worksheet.Cells[rowIndex, 5].PutValue(sp.TongTien.ToString());
                     rowIndex++;
-
-                    // Giả lập xử lý
-                    await Task.Delay(100, token);
                 }
 
-                // Áp dụng style cho tiêu đề
+                // Apply header style
                 var headerStyle = workbook.CreateStyle();
                 headerStyle.Font.IsBold = true;
                 headerStyle.ForegroundColor = System.Drawing.Color.LightGray;
                 headerStyle.Pattern = BackgroundType.Solid;
                 headerStyle.HorizontalAlignment = TextAlignmentType.Center;
 
-                for (int j = 0; j <= 5; j++)
-                {
-                    worksheet.Cells[4, j].SetStyle(headerStyle);
-                }
+                worksheet.Cells[4, 0].SetStyle(headerStyle);
+                worksheet.Cells[4, 1].SetStyle(headerStyle);
+                worksheet.Cells[4, 2].SetStyle(headerStyle);
+                worksheet.Cells[4, 3].SetStyle(headerStyle);
+                worksheet.Cells[4, 4].SetStyle(headerStyle);
+                worksheet.Cells[4, 5].SetStyle(headerStyle);
 
-                // Áp dụng border cho dữ liệu
+                // Apply border style
                 var borderStyle = workbook.CreateStyle();
                 borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
                 borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
@@ -143,7 +253,7 @@ namespace QuanLySanPham.Services
                     }
                 }
 
-                // Áp dụng style cho header phía trên
+                // Apply top header style
                 var topHeaderStyle = workbook.CreateStyle();
                 topHeaderStyle.Font.IsBold = true;
                 topHeaderStyle.HorizontalAlignment = TextAlignmentType.Left;
@@ -153,13 +263,13 @@ namespace QuanLySanPham.Services
                 worksheet.Cells[2, 1].SetStyle(topHeaderStyle);
                 worksheet.Cells[2, 3].SetStyle(topHeaderStyle);
 
-                // Lưu Workbook vào MemoryStream
+                // Save the workbook to a MemoryStream
                 using var stream = new MemoryStream();
                 workbook.Save(stream, SaveFormat.Pdf);
                 stream.Seek(0, SeekOrigin.Begin);
 
-                // Lưu file bằng FileSaver
-                var baseFileName = "Hóa đơn";
+                // Use FileSaver to save the file to the user's chosen location
+                var baseFileName = "hoaDon";
                 var extension = ".pdf";
                 var fileName = baseFileName + extension;
                 bool fileSaved = false;
@@ -167,13 +277,14 @@ namespace QuanLySanPham.Services
 
                 while (!fileSaved)
                 {
-                    token.ThrowIfCancellationRequested();
+                    var fileSaverResultTask = FileSaver.Default.SaveAsync(fileName, stream);
 
-                    var fileSaverResult = await FileSaver.Default.SaveAsync(fileName, stream);
+                    var fileSaverResult = await fileSaverResultTask;
 
                     if (fileSaverResult.IsSuccessful)
                     {
                         fileSaved = true;
+                        await Shell.Current.DisplayAlert("Thông báo", $"Xuất file thành công", "OK");
                     }
                     else if (fileSaverResult.Exception is IOException)
                     {
@@ -187,170 +298,33 @@ namespace QuanLySanPham.Services
                     }
                     else
                     {
-                        throw new OperationCanceledException("User canceled the file save operation.");
+                        await Shell.Current.DisplayAlert("Thông báo", "Bạn đã hủy lưu file.", "OK");
+                        return;
                     }
-
-                    // Giả lập xử lý
-                    await Task.Delay(100, token);
                 }
-            };
-
-            // Thực thi thao tác xuất với popup
-            await ExecuteWithPopupAsync(
-                exportOperation,
-                successMessage: "Xuất file thành công",
-                cancelMessage: "Bạn đã hủy lưu file.",
-                errorMessage: "Có lỗi xảy ra trong quá trình xuất file");
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Lỗi", $"Có lỗi xảy ra trong quá trình xuất file: {ex.Message}", "OK");
+            }
+            finally
+            {
+                cts.Cancel(); // Cancel the alert if the file-saving process starts
+            }
         }
 
-        /// <summary>
-        /// Nhập dữ liệu từ file Excel với hỗ trợ hủy bỏ.
-        /// </summary>
-        public async Task<string> Import(string dataPath, string userName)
+        async Task<bool> AllowUserToCancelAsync(CancellationToken token)
         {
-            string resultMessage = "Hiện chưa chọn tập tin nào.";
+            bool userCancelled = false;
 
-            Func<CancellationToken, Task> importOperation = async (token) =>
+            var cancellationTask = Shell.Current.DisplayAlert("Thông báo", "File đang được lưu...", "", "Hủy");
+
+            if (await Task.WhenAny(cancellationTask, Task.Delay(3000, token)) == cancellationTask)
             {
-                var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-                {
-                    { DevicePlatform.iOS, new[] { "com.microsoft.excel.xls", "org.openxmlformats.spreadsheetml.sheet" } },
-                    { DevicePlatform.Android, new[] { "application/vnd.ms-excel", "application/vnd.openxmlformats.spreadsheetml.sheet" } },
-                    { DevicePlatform.WinUI, new[] { ".xls", ".xlsx" } },
-                    { DevicePlatform.MacCatalyst, new[] { "com.microsoft.excel.xls", "org.openxmlformats.spreadsheetml.sheet" } }
-                });
+                userCancelled = await cancellationTask == false;
+            }
 
-                // Chọn file Excel (không thể hủy bỏ)
-                var file = await FilePicker.PickAsync(new PickOptions
-                {
-                    PickerTitle = "Chọn file Excel",
-                    FileTypes = customFileType
-                });
-
-                if (file != null)
-                {
-                    // Vì PickAsync không thể hủy, chỉ tiếp tục nếu đã chọn file
-                    dataPath = file.FullPath;
-                    using var stream = await file.OpenReadAsync();
-                    Workbook workbook = new Workbook(stream);
-                    Worksheet worksheet = workbook.Worksheets[0];
-
-                    ObservableCollection<SanPham> products = new ObservableCollection<SanPham>();
-                    int maxDataRow = worksheet.Cells.MaxDataRow;
-
-                    for (int i = 1; i <= maxDataRow; i++)
-                    {
-                        token.ThrowIfCancellationRequested();
-
-                        var maSanPham = worksheet.Cells[i, 0].StringValue;
-                        var tenSanPham = worksheet.Cells[i, 1].StringValue;
-                        var soLuong = worksheet.Cells[i, 2].IntValue;
-                        var giaTien = worksheet.Cells[i, 3].FloatValue;
-
-                        products.Add(new SanPham
-                        {
-                            MaSanPham = maSanPham,
-                            Ten = tenSanPham,
-                            SoLuong = soLuong,
-                            GiaTien = giaTien
-                        });
-
-                        // Giả lập xử lý
-                        await Task.Delay(100, token);
-                    }
-
-                    // Điều hướng tới trang danh sách sản phẩm với dữ liệu đã nhập
-                    await Shell.Current.GoToAsync(nameof(View.DanhSachSP), new Dictionary<string, object>
-                    {
-                        { "DsSanPham", products },
-                        { "UserName", userName }
-                    });
-
-                    resultMessage = "Import thành công.";
-                }
-            };
-
-            // Thực thi thao tác nhập với popup
-            await ExecuteWithPopupAsync(
-                importOperation,
-                successMessage: "Import thành công",
-                cancelMessage: "Bạn đã hủy nhập file.",
-                errorMessage: "Có lỗi xảy ra trong quá trình nhập file");
-
-            return resultMessage;
-        }
-
-        /// <summary>
-        /// Tạo file Excel mới với các tiêu đề và style đã định sẵn, hỗ trợ hủy bỏ.
-        /// </summary>
-        public async Task CreateNewFile()
-        {
-            Func<CancellationToken, Task> createFileOperation = async (token) =>
-            {
-                // Chọn thư mục lưu file (không thể hủy bỏ)
-                var folder = await FolderPicker.PickAsync(default);
-
-                if (folder != null && folder.Folder != null)
-                {
-                    var filePath = Path.Combine(folder.Folder.Path, "input.xlsx");
-
-                    Workbook workbook = new Workbook();
-                    Worksheet worksheet = workbook.Worksheets[0];
-
-                    // Thiết lập độ rộng cột cho bố cục sạch sẽ
-                    worksheet.Cells.SetColumnWidth(0, 20);
-                    worksheet.Cells.SetColumnWidth(1, 20);
-                    worksheet.Cells.SetColumnWidth(2, 12);
-                    worksheet.Cells.SetColumnWidth(3, 12);
-
-                    // Tiêu đề bảng
-                    worksheet.Cells[0, 0].PutValue("Mã sản phẩm");
-                    worksheet.Cells[0, 1].PutValue("Tên sản phẩm");
-                    worksheet.Cells[0, 2].PutValue("Số lượng");
-                    worksheet.Cells[0, 3].PutValue("Giá tiền");
-
-                    // Áp dụng style in đậm cho tiêu đề
-                    var headerStyle = workbook.CreateStyle();
-                    headerStyle.Font.IsBold = true;
-                    headerStyle.ForegroundColor = System.Drawing.Color.LightGray;
-                    headerStyle.Pattern = BackgroundType.Solid;
-                    headerStyle.HorizontalAlignment = TextAlignmentType.Center;
-
-                    for (int j = 0; j <= 3; j++)
-                    {
-                        worksheet.Cells[0, j].SetStyle(headerStyle);
-                    }
-
-                    // Áp dụng border cho tiêu đề
-                    var borderStyle = workbook.CreateStyle();
-                    borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-                    borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-                    borderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-                    borderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
-
-                    for (int j = 0; j <= 3; j++)
-                    {
-                        worksheet.Cells[0, j].SetStyle(borderStyle);
-                    }
-
-                    // Giả lập xử lý
-                    await Task.Delay(500, token);
-
-                    // Lưu Workbook dưới dạng file Excel
-                    workbook.Save(filePath, SaveFormat.Xlsx);
-                }
-                else
-                {
-                    throw new OperationCanceledException("Vui lòng chọn thư mục để lưu file.");
-                }
-            };
-
-            // Thực thi thao tác tạo file với popup
-            await ExecuteWithPopupAsync(
-                createFileOperation,
-                successMessage: "Tạo file thành công",
-                cancelMessage: "Bạn đã hủy tạo file.",
-                errorMessage: "Có lỗi xảy ra trong quá trình tạo file");
+            return userCancelled;
         }
     }
 }
