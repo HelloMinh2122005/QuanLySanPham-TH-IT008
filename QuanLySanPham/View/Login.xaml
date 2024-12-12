@@ -61,8 +61,28 @@
                            Source="login_icon.png"/>
                     <Entry Grid.Column="1"
                            TextColor="Black"
-                           Placeholder="Hãy nhập tên của bạn"
-                           Text="{Binding Username}">
+                           Placeholder="Hãy nhập tên đăng nhập"
+                           Text="{Binding Username}"
+                           ReturnType="Next"
+                           toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference PasswordEntry}"/>
+                </Grid>
+
+                <Grid Margin="0, 30, 0, 0" ColumnDefinitions=".2*, .8*">
+                    <RoundRectangle
+                        BackgroundColor="Lavender"
+                        CornerRadius="10"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        HeightRequest="60"
+                        WidthRequest="60"/>
+                    <Image HeightRequest="60"
+                           WidthRequest="60"
+                           Source="password_icon.png"/>
+                    <Entry Grid.Column="1"
+                           x:Name="PasswordEntry"
+                           TextColor="Black"
+                           Placeholder="Hãy nhập mật khẩu"
+                           Text="{Binding Password}">
                         <Entry.Behaviors>
                             <toolkit:EventToCommandBehavior
                                 EventName="Completed"
@@ -81,5 +101,5 @@
             </VerticalStackLayout>
         </Grid>
     </Grid>
-        
+
 </ContentPage>
