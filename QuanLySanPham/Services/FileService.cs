@@ -274,36 +274,17 @@ namespace QuanLySanPham.Services
                 var baseFileName = $"{hoaDon.TenKhachHang}_{ngayTao.ToString("dd/MM/yyyy")}_{hoaDon.TongTienSauGiam}";
                 var extension = ".pdf";
                 var fileName = baseFileName + extension;
-                bool fileSaved = false;
-                int fileIndex = 0;
 
-                while (!fileSaved)
+                var fileSaverResult = await FileSaver.Default.SaveAsync(fileName, stream);
+
+                if (fileSaverResult.IsSuccessful)
                 {
-                    var fileSaverResult = await FileSaver.Default.SaveAsync(fileName, stream);
-
-                    if (fileSaverResult.IsSuccessful)
-                    {
-                        fileSaved = true;
-                        await Shell.Current.DisplayAlert("Thông báo", $"Xuất file thành công", "OK");
-                    }
-                    else if (fileSaverResult.Exception != null)
-                    {
-                        if (fileSaverResult.Exception is IOException)
-                        {
-                            // Increment file index and update file name before the extension
-                            fileName = $"{baseFileName} ({fileIndex++}){extension}";
-                            stream.Seek(0, SeekOrigin.Begin);
-                        }
-                        else
-                        {
-                            throw fileSaverResult.Exception;
-                        }
-                    }
-                    else
-                    {
-                        await Shell.Current.DisplayAlert("Thông báo", "Bạn đã hủy lưu file.", "OK");
-                        return;
-                    }
+                    await Shell.Current.DisplayAlert("Thông báo", $"Xuất file thành công", "OK");
+                }
+                else
+                {
+                    await Shell.Current.DisplayAlert("Thông báo", "Bạn đã hủy lưu file.", "OK");
+                    return;
                 }
             }
             catch (Exception ex)
