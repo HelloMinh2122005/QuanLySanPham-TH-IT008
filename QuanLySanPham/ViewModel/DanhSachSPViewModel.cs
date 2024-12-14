@@ -1,12 +1,8 @@
-﻿using CommunityToolkit.Maui.Storage;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using QuanLySanPham.Model;
 using QuanLySanPham.View;
 using System.Collections.ObjectModel;
-using Aspose.Cells;
-using QuanLySanPham.Services;
-
 
 namespace QuanLySanPham.ViewModel;
 
@@ -16,17 +12,10 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     private ObservableCollection<SanPham> dsSanPham;
 
     [ObservableProperty]
-    string title;
-
-    [ObservableProperty]
-    private int stt;
-
-    [ObservableProperty]
     float thanhTien;
 
     private SanPham selectedSanPham;
     public float GiaTientmp;
-    public string UserName;
     private ObservableCollection<SanPham> DsSanPhamThem;
     private ObservableCollection<SanPham> DsSanPhamSua;
     private ObservableCollection<SanPham> DsSanPhamXoa;
@@ -34,9 +23,6 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
     public DanhSachSPViewModel()
     {
         dsSanPham = new ObservableCollection<SanPham>();
-        Stt = 0;
-        title = "Chào ";
-        UserName = "";
         thanhTien = 0;
         GiaTientmp = 0;
         selectedSanPham = new SanPham();
@@ -70,9 +56,8 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         {
             return;
         }
-        if (query.ContainsKey("DsSanPham") && query.ContainsKey("UserName"))
+        if (query.ContainsKey("DsSanPham"))
         {
-            UserName = query["UserName"].ToString() ?? "";
             DsSanPham = query["DsSanPham"] as ObservableCollection<SanPham> ?? new ObservableCollection<SanPham>();
             ThanhTien = 0;
             if (DsSanPham.Count == 0)
@@ -84,7 +69,6 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
         }
         if (query.ContainsKey("add"))
         {
-            Stt++;
             var newSP = query["add"] as SanPham ?? new SanPham();
             var existingSP = DsSanPham.FirstOrDefault(sp => sp.MaSanPham == newSP.MaSanPham);
             if (existingSP != null)
@@ -106,7 +90,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                 }
 
             }
-            DsSanPham.Add(newSP);
+            DsSanPham.Insert(0, newSP);
             DsSanPhamThem.Add(newSP);
             ThanhTien += newSP.TongTien;
             query.Remove("add");
@@ -164,13 +148,13 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
                             {
                                 ThanhTien -= existingSP.TongTien;
                                 DsSanPham.Remove(existingSP);
-                                DsSanPham.Add(sanPham);
+                                DsSanPham.Insert(0, sanPham);
                                 ThanhTien += sanPham.TongTien;
                             }
                             break;
 
                         case "Xóa":
-                            DsSanPham.Add(sanPham);
+                            DsSanPham.Insert(0, sanPham);
                             ThanhTien += sanPham.TongTien;
                             break;
                     }
@@ -253,9 +237,17 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
             await Shell.Current.DisplayAlert("Thông báo", "Không có sản phẩm nào để xuất file", "OK");
             return;
         }
+
+        HoaDon hd = new HoaDon
+        {
+            DsSanPham = DsSanPham,
+            TongTien = ThanhTien,
+        };
         
-        var fileHelper = new FileService();
-        await fileHelper.Export(UserName, ThanhTien, DsSanPham);
+        await Shell.Current.GoToAsync($"{nameof(SaveFilePage)}", new Dictionary<string, object>
+        {
+            {"HoaDon", hd }
+        });
     }
 
     [RelayCommand]
@@ -267,5 +259,16 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
             {"DSSPThem", DsSanPhamThem },
             {"DSSPSua", DsSanPhamSua }
         });
+    }
+
+    [RelayCommand]
+    async Task Sort()
+    {
+        if (DsSanPham.Count == 0)
+        {
+            await Shell.Current.DisplayAlert("Thông báo", "Không có sản phẩm nào để sắp xếp", "OK");
+            return;
+        }
+        DsSanPham = new ObservableCollection<SanPham>(DsSanPham.OrderByDescending(sp => sp.TongTien));
     }
 }

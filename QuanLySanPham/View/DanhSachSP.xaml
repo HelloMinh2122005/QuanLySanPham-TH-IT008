@@ -7,15 +7,29 @@
              xmlns:model="clr-namespace:QuanLySanPham.Model">
 
 
-    <VerticalStackLayout Spacing="10" Margin="15,10,15,10">
+    <VerticalStackLayout Spacing="10" Margin="15,0,15,10">
 
-        <Label
-            Text="Danh sách sản phẩm"
-            HorizontalOptions="Center" 
-            FontFamily="bold"
-            TextColor="Black"
-            FontAttributes="Bold"
-            FontSize="Large"/>
+
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+            <Label
+                Text="Danh sách sản phẩm"
+                HorizontalOptions="Center" 
+                FontFamily="bold"
+                TextColor="Black"
+                FontAttributes="Bold"
+                FontSize="Large"/>
+
+            <Border HeightRequest="43" >
+                <Button Text="Sắp xếp"
+                    HorizontalOptions="End"
+                    BackgroundColor="Transparent"
+                    TextColor="Black"
+                    BorderColor="Black"
+                    Command="{Binding SortCommand}"/>
+            </Border>
+        </HorizontalStackLayout>
+        
+
 
         <Grid ColumnDefinitions="Auto, *, Auto, *, Auto, *, Auto, *, Auto, *, Auto"
               BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
@@ -89,7 +103,7 @@
                         SelectionChangedCommand="{Binding SelectCommand}"
                         SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}"
                         ItemsSource="{Binding DsSanPham}"
-                        HeightRequest="430">
+                        HeightRequest="400">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid ColumnDefinitions="*, *, *, *, *"

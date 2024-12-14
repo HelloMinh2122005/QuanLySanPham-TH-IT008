@@ -17,7 +17,7 @@
                 <Label FontAttributes="Bold"
                        FontFamily="bold"
                        FontSize="Large"
-                       Text="{Binding Hello}"
+                       Text="Chào mừng trở lại, Minh"
                        TextColor="Black"/>
                 <Label FontFamily="medium"
                        Text="Để tiếp tục, hãy nhập thông tin tập tin."

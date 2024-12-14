@@ -1,41 +1,22 @@
-﻿using CommunityToolkit.Maui.Storage;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using QuanLySanPham.View;
 using QuanLySanPham.Model;
-using Aspose.Cells;
-using System.Collections.ObjectModel;
 using QuanLySanPham.Services;
 
 namespace QuanLySanPham.ViewModel;
 
-public partial class MainPageViewModel : ObservableObject, IQueryAttributable
+public partial class MainPageViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private string userName = "";
-
-    [ObservableProperty]
-    private string hello = "Chào ";
-
     [ObservableProperty]
     private string dataPath = "Hiện chưa chọn tập tin nào.";
 
     private readonly FileService fileService = new FileService();
 
-    void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
-    {
-        if (query.ContainsKey("UserName"))
-        {
-            Hello = "Chào ";
-            UserName = query["UserName"].ToString() ?? "";
-            Hello += UserName;
-        }
-    }
-
     [RelayCommand]
     async Task NhapFile()
     {
-        DataPath = await fileService.Import(DataPath, UserName);
+        DataPath = await fileService.Import();
     }
 
     [RelayCommand]
@@ -48,10 +29,9 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
     async Task BoQua()
     {
         await Shell.Current.GoToAsync(nameof(DanhSachSP), new Dictionary<string, object>
-                {
-                    {"DsSanPham", new SanPham() },
-                    {"UserName", UserName }
-                });
+        {
+            {"DsSanPham", new SanPham() }
+        });
     }
 
     [RelayCommand]

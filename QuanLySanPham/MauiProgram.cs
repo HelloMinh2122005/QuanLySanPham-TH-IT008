@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using QuanLySanPham.Model;
+using QuanLySanPham.Services;
 using QuanLySanPham.View;
 using QuanLySanPham.ViewModel;
 
@@ -26,6 +27,7 @@ namespace QuanLySanPham
             builder.Services.AddSingleton<SanPham>();
             builder.Services.AddSingleton<HoaDon>();
             builder.Services.AddSingleton<HistoryItem>();
+            builder.Services.AddSingleton<FileService>();
 
             builder.Services.AddSingleton<Login>();
             builder.Services.AddSingleton<LoginViewModel>();
@@ -44,6 +46,9 @@ namespace QuanLySanPham
 
             builder.Services.AddTransient<ViewHistory>();
             builder.Services.AddTransient<ViewHistoryViewModel>();
+
+            builder.Services.AddTransient<SaveFilePage>();
+            builder.Services.AddTransient<SaveFilePageViewModel>();
 
             return builder.Build();
         }

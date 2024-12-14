@@ -4,9 +4,9 @@ namespace QuanLySanPham.Model;
 
 public class HoaDon
 {
-    public string TenNguoiTao { get; set; } = "";
-    public DateTime NgayTao { get; set; } = DateTime.Now;
+    public string TenKhachHang { get; set; } = "";
     public float TongTien { get; set; } = 0;
-
+    public float TongTienSauGiam { get; set; } = 0;
+    public float GiamGia { get; set; } = 0;
     public ObservableCollection<SanPham> DsSanPham { get; set; } = [];
 }

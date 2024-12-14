@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuanLySanPham.View.SaveFilePage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodel="clr-namespace:QuanLySanPham.ViewModel"
+             x:DataType="viewmodel:SaveFilePageViewModel">
+    
+    <VerticalStackLayout>
+        <Grid>
+            <RoundRectangle 
+            Margin="-5, -30, -5, -2"
+            Fill="White"/>
+
+            <VerticalStackLayout Margin="30, 0, 30, 0">
+                <Label FontAttributes="Bold"
+                   FontFamily="bold"
+                   FontSize="Large"
+                   Text="Thông tin hóa đơn"
+                   HorizontalOptions="Center"/>
+
+                <Grid Margin="0, 30, 0, 0" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto" RowSpacing="20">
+                    <Label Grid.Row="0" Text="Nhập tên khách hàng" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
+                    <Entry Grid.Row="1" 
+                       x:Name="EntryMaSanPham"
+                       Text="{Binding TenKhachHang}" 
+                       ReturnType="Next"
+                       toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference EntryTen}"
+                       Placeholder="Nhập tên khách hàng"/>
+                    
+                    <Label Grid.Row="2" Text="Nhập giảm giá" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
+                    <Entry Grid.Row="3" 
+                       x:Name="EntryTen"
+                       ReturnType="Next"
+                       toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference EntryGiaTien}"
+                       Text="{Binding GiamGia}" 
+                       Placeholder="0"/>
+                    <Label Grid.Row="4" Text="Tổng tiền hóa đơn" FontAttributes="Bold" FontSize="Medium" TextColor="DarkBlue"/>
+                    <Entry Grid.Row="5" 
+                       x:Name="EntryGiaTien"
+                       ReturnType="Next"
+                       toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference EntrySoLuong}"
+                       Text="{Binding TongTien}"/>
+                    
+                    <Grid Grid.Row="6"
+                      ColumnDefinitions="*, *"
+                      ColumnSpacing="20">
+                        <Button Text="Xuất hóa đơn"
+                            Command="{Binding ExportCommand}"
+                            Grid.Column="0"
+                            BackgroundColor="Green"/>
+                        <Button Text="Hủy"
+                            Command="{Binding CancelCommand}"
+                            Grid.Column="1"
+                            BackgroundColor="Red"/>
+                    </Grid>
+                </Grid>
+            </VerticalStackLayout>
+        </Grid>
+    </VerticalStackLayout>
+</ContentPage>

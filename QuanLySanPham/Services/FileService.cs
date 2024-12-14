@@ -1,19 +1,14 @@
 ﻿using Aspose.Cells;
 using CommunityToolkit.Maui.Storage;
-using CommunityToolkit.Maui.Views;
 using QuanLySanPham.Model;
 using QuanLySanPham.View;
-using System;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace QuanLySanPham.Services
 {
     public partial class FileService
     {
-        public async Task<string> Import(string DataPath, string UserName)
+        public async Task<string> Import()
         {
             var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
             {
@@ -28,6 +23,8 @@ namespace QuanLySanPham.Services
                 PickerTitle = "Chọn file Excel",
                 FileTypes = customFileType
             });
+
+            string DataPath = "";
 
             if (file != null)
             {
@@ -59,8 +56,7 @@ namespace QuanLySanPham.Services
 
                     await Shell.Current.GoToAsync(nameof(DanhSachSP), new Dictionary<string, object>
                     {
-                        { "DsSanPham", DsSanPham },
-                        { "UserName", UserName }
+                        { "DsSanPham", DsSanPham }
                     });
 
                     return DataPath;
@@ -165,7 +161,7 @@ namespace QuanLySanPham.Services
         }
 
 
-        public async Task Export(string UserName, float ThanhTien, ObservableCollection<SanPham> DsSanPham)
+        public async Task Export(HoaDon hoaDon)
         {
             var cts = new CancellationTokenSource();
             var userCancelled = await AllowUserToCancelAsync(cts.Token);
@@ -174,14 +170,6 @@ namespace QuanLySanPham.Services
                 await Shell.Current.DisplayAlert("Thông báo", "Bạn đã hủy lưu file.", "OK");
                 return;
             }
-
-            var hoaDon = new HoaDon
-            {
-                TenNguoiTao = UserName,
-                NgayTao = DateTime.Now,
-                TongTien = ThanhTien,
-                DsSanPham = DsSanPham
-            };
 
             try
             {
@@ -197,24 +185,35 @@ namespace QuanLySanPham.Services
                 worksheet.Cells.SetColumnWidth(5, 15);
 
                 worksheet.Cells[0, 1].PutValue("Tên người tạo:");
-                worksheet.Cells[0, 2].PutValue(hoaDon.TenNguoiTao);
-                worksheet.Cells[1, 1].PutValue("Ngày tạo:");
-                worksheet.Cells[1, 2].PutValue(hoaDon.NgayTao.ToString("dd/MM/yyyy"));
-                worksheet.Cells[2, 1].PutValue("Tổng giá trị hóa đơn:");
-                worksheet.Cells[2, 2].PutValue(hoaDon.TongTien.ToString());
-                worksheet.Cells[2, 3].PutValue("Đơn vị: VNĐ");
+                worksheet.Cells[0, 2].PutValue("Phan Đình Minh");
+                worksheet.Cells[1, 1].PutValue("Tên khách hàng:");
+                worksheet.Cells[1, 2].PutValue(hoaDon.TenKhachHang);
 
-                worksheet.Cells[4, 0].PutValue("STT");
-                worksheet.Cells[4, 1].PutValue("Mã sản phẩm");
-                worksheet.Cells[4, 2].PutValue("Tên sản phẩm");
-                worksheet.Cells[4, 3].PutValue("Số lượng");
-                worksheet.Cells[4, 4].PutValue("Giá tiền");
-                worksheet.Cells[4, 5].PutValue("Tổng tiền");
+                DateTime ngayTao = DateTime.Now;
+                worksheet.Cells[2, 1].PutValue("Ngày tạo:");
+                worksheet.Cells[2, 2].PutValue(ngayTao.ToString("dd/MM/yyyy"));
+                worksheet.Cells[3, 1].PutValue("Tổng giá trị ban đầu:");
+                worksheet.Cells[3, 2].PutValue(hoaDon.TongTien.ToString());
+                worksheet.Cells[3, 3].PutValue("Đơn vị: VNĐ");
 
-                int rowIndex = 5;
+                worksheet.Cells[4, 1].PutValue("Giảm giá(%):");
+                worksheet.Cells[4, 2].PutValue(hoaDon.GiamGia.ToString());
+
+                worksheet.Cells[5, 1].PutValue("Tổng giá trị ban đầu:");
+                worksheet.Cells[5, 2].PutValue(hoaDon.TongTien.ToString());
+                worksheet.Cells[5, 3].PutValue("Đơn vị: VNĐ");
+
+                worksheet.Cells[7, 0].PutValue("STT");
+                worksheet.Cells[7, 1].PutValue("Mã sản phẩm");
+                worksheet.Cells[7, 2].PutValue("Tên sản phẩm");
+                worksheet.Cells[7, 3].PutValue("Số lượng");
+                worksheet.Cells[7, 4].PutValue("Giá tiền");
+                worksheet.Cells[7, 5].PutValue("Tổng tiền");
+
+                int rowIndex = 8;
                 foreach (var sp in hoaDon.DsSanPham)
                 {
-                    int valStt = rowIndex - 4;
+                    int valStt = rowIndex - 7;
                     worksheet.Cells[rowIndex, 0].PutValue(valStt.ToString());
                     worksheet.Cells[rowIndex, 1].PutValue(sp.MaSanPham);
                     worksheet.Cells[rowIndex, 2].PutValue(sp.Ten);
@@ -231,12 +230,12 @@ namespace QuanLySanPham.Services
                 headerStyle.Pattern = BackgroundType.Solid;
                 headerStyle.HorizontalAlignment = TextAlignmentType.Center;
 
-                worksheet.Cells[4, 0].SetStyle(headerStyle);
-                worksheet.Cells[4, 1].SetStyle(headerStyle);
-                worksheet.Cells[4, 2].SetStyle(headerStyle);
-                worksheet.Cells[4, 3].SetStyle(headerStyle);
-                worksheet.Cells[4, 4].SetStyle(headerStyle);
-                worksheet.Cells[4, 5].SetStyle(headerStyle);
+                worksheet.Cells[7, 0].SetStyle(headerStyle);
+                worksheet.Cells[7, 1].SetStyle(headerStyle);
+                worksheet.Cells[7, 2].SetStyle(headerStyle);
+                worksheet.Cells[7, 3].SetStyle(headerStyle);
+                worksheet.Cells[7, 4].SetStyle(headerStyle);
+                worksheet.Cells[7, 5].SetStyle(headerStyle);
 
                 // Apply border style
                 var borderStyle = workbook.CreateStyle();
@@ -245,7 +244,7 @@ namespace QuanLySanPham.Services
                 borderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
                 borderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
 
-                for (int i = 5; i < rowIndex; i++)
+                for (int i = 8; i < rowIndex; i++)
                 {
                     for (int j = 0; j <= 5; j++)
                     {
@@ -261,15 +260,18 @@ namespace QuanLySanPham.Services
                 worksheet.Cells[0, 1].SetStyle(topHeaderStyle);
                 worksheet.Cells[1, 1].SetStyle(topHeaderStyle);
                 worksheet.Cells[2, 1].SetStyle(topHeaderStyle);
-                worksheet.Cells[2, 3].SetStyle(topHeaderStyle);
+                worksheet.Cells[3, 1].SetStyle(topHeaderStyle);
+                worksheet.Cells[3, 3].SetStyle(topHeaderStyle);
+                worksheet.Cells[4, 1].SetStyle(topHeaderStyle);
+                worksheet.Cells[5, 1].SetStyle(topHeaderStyle);
+                worksheet.Cells[5, 3].SetStyle(topHeaderStyle);
 
                 // Save the workbook to a MemoryStream
                 using var stream = new MemoryStream();
                 workbook.Save(stream, SaveFormat.Pdf);
                 stream.Seek(0, SeekOrigin.Begin);
 
-                // Use FileSaver to save the file to the user's chosen location
-                var baseFileName = "hoaDon";
+                var baseFileName = $"{hoaDon.TenKhachHang}_{ngayTao.ToString("dd/MM/yyyy")}_{hoaDon.TongTienSauGiam}";
                 var extension = ".pdf";
                 var fileName = baseFileName + extension;
                 bool fileSaved = false;
@@ -277,24 +279,25 @@ namespace QuanLySanPham.Services
 
                 while (!fileSaved)
                 {
-                    var fileSaverResultTask = FileSaver.Default.SaveAsync(fileName, stream);
-
-                    var fileSaverResult = await fileSaverResultTask;
+                    var fileSaverResult = await FileSaver.Default.SaveAsync(fileName, stream);
 
                     if (fileSaverResult.IsSuccessful)
                     {
                         fileSaved = true;
                         await Shell.Current.DisplayAlert("Thông báo", $"Xuất file thành công", "OK");
                     }
-                    else if (fileSaverResult.Exception is IOException)
-                    {
-                        fileIndex++;
-                        fileName = $"{baseFileName}({fileIndex}){extension}";
-                        stream.Seek(0, SeekOrigin.Begin);
-                    }
                     else if (fileSaverResult.Exception != null)
                     {
-                        throw fileSaverResult.Exception;
+                        if (fileSaverResult.Exception is IOException)
+                        {
+                            // Increment file index and update file name before the extension
+                            fileName = $"{baseFileName} ({fileIndex++}){extension}";
+                            stream.Seek(0, SeekOrigin.Begin);
+                        }
+                        else
+                        {
+                            throw fileSaverResult.Exception;
+                        }
                     }
                     else
                     {
