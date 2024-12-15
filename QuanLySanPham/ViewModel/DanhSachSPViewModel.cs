@@ -270,5 +270,6 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
             return;
         }
         DsSanPham = new ObservableCollection<SanPham>(DsSanPham.OrderByDescending(sp => sp.TongTien));
+        await Shell.Current.DisplayAlert("Thông báo", "Sản phẩm đã được sắp xếp theo giá giảm dần", "OK");
     }
 }
