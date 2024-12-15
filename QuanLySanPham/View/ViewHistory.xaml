@@ -43,24 +43,12 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:HistoryItem">
                                 <Grid ColumnDefinitions="*, *, *, *, *, *" Padding="10">
-                                    <Border Grid.Column="0" Stroke="LightGray" StrokeThickness="1" Padding="5">
-                                        <Label Text="{Binding SanPham.MaSanPham}" VerticalOptions="Center"/>
-                                    </Border>
-                                    <Border Grid.Column="1" Stroke="LightGray" StrokeThickness="1" Padding="5">
-                                        <Label Text="{Binding SanPham.Ten}" VerticalOptions="Center"/>
-                                    </Border>
-                                    <Border Grid.Column="2" Stroke="LightGray" StrokeThickness="1" Padding="5">
-                                        <Label Text="{Binding SanPham.GiaTien}" HorizontalOptions="Center" VerticalOptions="Center"/>
-                                    </Border>
-                                    <Border Grid.Column="3" Stroke="LightGray" StrokeThickness="1" Padding="5">
-                                        <Label Text="{Binding SanPham.SoLuong}" HorizontalOptions="Center" VerticalOptions="Center"/>
-                                    </Border>
-                                    <Border Grid.Column="4" Stroke="LightGray" StrokeThickness="1" Padding="5">
-                                        <Label Text="{Binding SanPham.TongTien}" HorizontalOptions="Center" VerticalOptions="Center"/>
-                                    </Border>
-                                    <Border Grid.Column="5" Stroke="LightGray" StrokeThickness="1" Padding="5">
-                                        <Label Text="{Binding Action}" HorizontalOptions="Center" VerticalOptions="Center"/>
-                                    </Border>
+                                    <Label Grid.Column="0" Text="{Binding SanPham.MaSanPham}" VerticalOptions="Center"/>
+                                    <Label Grid.Column="1" Text="{Binding SanPham.Ten}" VerticalOptions="Center"/>
+                                    <Label Grid.Column="2" Text="{Binding SanPham.GiaTien}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Label Grid.Column="3" Text="{Binding SanPham.SoLuong}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Label Grid.Column="4" Text="{Binding SanPham.TongTien}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Label Grid.Column="5" Text="{Binding Action}" HorizontalOptions="Center" VerticalOptions="Center"/>
                                 </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>

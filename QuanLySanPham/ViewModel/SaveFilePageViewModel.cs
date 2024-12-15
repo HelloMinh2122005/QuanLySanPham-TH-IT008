@@ -12,7 +12,7 @@ public partial class SaveFilePageViewModel : ObservableObject, IQueryAttributabl
     string tenKhachHang = "";
 
     [ObservableProperty]
-    float giamGia = 0;
+    string giamGia = "";
 
     [ObservableProperty]
     float tongTien = 0;
@@ -27,21 +27,35 @@ public partial class SaveFilePageViewModel : ObservableObject, IQueryAttributabl
         }
     }
 
-    partial void OnGiamGiaChanged(float value)
+    partial void OnGiamGiaChanged(string value)
     {
         Task.Run(async () =>
         {
             await Task.Delay(100); // Wait for 0.1 second
-            TongTien = hd.TongTien * (100 - GiamGia) / 100;
+
+            if (string.IsNullOrWhiteSpace(GiamGia))
+            {
+                TongTien = hd.TongTien;
+            }
+            else
+            {
+                float giamgia = float.Parse(GiamGia);
+                TongTien = hd.TongTien * (100 - giamgia) / 100;
+            }
         });
     }
 
     [RelayCommand]
     async Task Export()
     {
+        if (string.IsNullOrWhiteSpace(GiamGia))
+        {
+            GiamGia = "0";
+            TongTien = hd.TongTien;
+        }
         hd.TenKhachHang = TenKhachHang;
         hd.TongTienSauGiam = TongTien;
-        hd.GiamGia = GiamGia;
+        hd.GiamGia = float.Parse(GiamGia);
 
         var fileHelper = new FileService();
         await fileHelper.Export(hd);

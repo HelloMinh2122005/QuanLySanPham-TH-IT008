@@ -82,7 +82,8 @@
                            x:Name="PasswordEntry"
                            TextColor="Black"
                            Placeholder="Hãy nhập mật khẩu"
-                           Text="{Binding Password}">
+                           Text="{Binding Password}"
+                           IsPassword="True">
                         <Entry.Behaviors>
                             <toolkit:EventToCommandBehavior
                                 EventName="Completed"
