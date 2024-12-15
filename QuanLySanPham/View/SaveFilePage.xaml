@@ -39,7 +39,6 @@
                     <Entry Grid.Row="5" 
                        x:Name="EntryGiaTien"
                        ReturnType="Next"
-                       toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference EntrySoLuong}"
                        Text="{Binding TongTien}"/>
                     
                     <Grid Grid.Row="6"

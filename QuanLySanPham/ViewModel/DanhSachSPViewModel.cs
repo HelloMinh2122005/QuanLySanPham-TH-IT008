@@ -243,7 +243,7 @@ public partial class DanhSachSPViewModel : ObservableObject, IQueryAttributable
             DsSanPham = DsSanPham,
             TongTien = ThanhTien,
         };
-        
+
         await Shell.Current.GoToAsync($"{nameof(SaveFilePage)}", new Dictionary<string, object>
         {
             {"HoaDon", hd }

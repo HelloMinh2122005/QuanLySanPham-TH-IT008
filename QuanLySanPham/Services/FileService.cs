@@ -279,7 +279,7 @@ namespace QuanLySanPham.Services
 
                 if (fileSaverResult.IsSuccessful)
                 {
-                    await Shell.Current.DisplayAlert("Thông báo", $"Xuất file thành công", "OK");
+                    await Shell.Current.DisplayAlert("Thông báo", $"Xuất hóa đơn thành công", "OK");
                 }
                 else
                 {
