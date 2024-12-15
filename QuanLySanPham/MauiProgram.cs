@@ -44,8 +44,8 @@ namespace QuanLySanPham
             builder.Services.AddTransient<EditSanPham>();
             builder.Services.AddTransient<EditSanPhamViewModel>();
 
-            builder.Services.AddSingleton<ViewHistory>();
-            builder.Services.AddSingleton<ViewHistoryViewModel>();
+            builder.Services.AddTransient<ViewHistory>();
+            builder.Services.AddTransient<ViewHistoryViewModel>();
 
             builder.Services.AddTransient<SaveFilePage>();
             builder.Services.AddTransient<SaveFilePageViewModel>();
