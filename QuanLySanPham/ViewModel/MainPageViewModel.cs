@@ -16,6 +16,15 @@ public partial class MainPageViewModel : ObservableObject
     [RelayCommand]
     async Task NhapFile()
     {
+        if (DataPath != "Hiện chưa chọn tập tin nào.")
+        {
+            bool ac = await Shell.Current.DisplayAlert("Thông báo", "Bạn có chắc muốn nhập hóa đơn mới và hủy hóa đơn hiện tại?", "Có", "Không");
+            if (ac)
+            {
+                DataPath = await fileService.Import();
+            }
+            return;
+        }
         DataPath = await fileService.Import();
     }
 
@@ -28,6 +37,20 @@ public partial class MainPageViewModel : ObservableObject
     [RelayCommand]
     async Task BoQua()
     {
+        if (DataPath != "Hiện chưa chọn tập tin nào.")
+        {
+            bool ac = await Shell.Current.DisplayAlert("Thông báo", "Bạn có chắc muốn nhập hóa đơn mới và hủy hóa đơn hiện tại?", "Có", "Không");
+            if (ac)
+            {
+                DataPath = "Hiện có 1 hóa đơn đang được xử lý.";
+                await Shell.Current.GoToAsync(nameof(DanhSachSP), new Dictionary<string, object>
+                {
+                    {"DsSanPham", new SanPham() }
+                });
+            }
+            return;
+        }
+        DataPath = "Hiện có 1 hóa đơn đang được xử lý.";
         await Shell.Current.GoToAsync(nameof(DanhSachSP), new Dictionary<string, object>
         {
             {"DsSanPham", new SanPham() }
@@ -39,7 +62,7 @@ public partial class MainPageViewModel : ObservableObject
     {
         if (DataPath == "Hiện chưa chọn tập tin nào.")
         {
-            await Shell.Current.DisplayAlert("Thông báo", "Vui lòng chọn tập tin Excel trước khi chọn", "OK");
+            await Shell.Current.DisplayAlert("Thông báo", "Hiện tại chưa có hóa đơn nào được xử lý", "OK");
             return;
         }
         await Shell.Current.GoToAsync($"{nameof(DanhSachSP)}?nochange=ok");
