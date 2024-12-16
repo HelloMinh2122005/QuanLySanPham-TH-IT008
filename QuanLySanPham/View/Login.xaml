@@ -48,7 +48,7 @@
                 <Label FontFamily="medium"
                        Text="Đăng nhập để tiếp tục"
                        TextColor="Gray"/>
-                <Grid Margin="0, 30, 0, 0" ColumnDefinitions=".2*, .8*">
+                <Grid Margin="0, 30, 0, 0" ColumnDefinitions=".2*, .8*" IsVisible="{Binding IsInvisible}">
                     <RoundRectangle
                         BackgroundColor="Lavender"
                         CornerRadius="10"
@@ -67,7 +67,7 @@
                            toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference PasswordEntry}"/>
                 </Grid>
 
-                <Grid Margin="0, 30, 0, 0" ColumnDefinitions=".2*, .8*">
+                <Grid Margin="0, 30, 0, 0" ColumnDefinitions=".2*, .8*"  IsVisible="{Binding IsInvisible}">
                     <RoundRectangle
                         BackgroundColor="Lavender"
                         CornerRadius="10"
@@ -93,11 +93,61 @@
                 </Grid>
 
                 <Button Text="Tiếp tục"
+                         IsVisible="{Binding IsInvisible}"
                         TextColor="White"
                         Margin="0,50,0,0"
                         BackgroundColor="DarkSlateBlue"
                         HeightRequest="60"
                         Command="{Binding ContinueCommand}"/>
+
+                <Button Text="Quên mật khẩu" 
+                        TextColor="DarkSlateBlue"
+                        BackgroundColor="Transparent"
+                        Command="{Binding ForgotCommand}"
+                        IsVisible="{Binding IsInvisible}"
+                        HorizontalOptions="End"/>
+
+                <Grid Margin="0, 30, 0, 0" ColumnDefinitions=".2*, .8*"  IsVisible="{Binding IsNotInvisible}">
+                    <RoundRectangle
+                        BackgroundColor="Lavender"
+                        CornerRadius="10"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        HeightRequest="60"
+                        WidthRequest="60"/>
+                    <Image HeightRequest="60"
+                           WidthRequest="60"
+                           Source="sdt.png"/>
+                    <Entry Grid.Column="1"
+                           TextColor="Black"
+                           Placeholder="Hãy nhập số điện thoại"
+                           Text="{Binding Sdt}"/>
+                </Grid>
+
+                <Grid Margin="0, 30, 0, 0" ColumnDefinitions=".2*, .8*" IsVisible="{Binding IsNotInvisible}">
+                    <RoundRectangle
+                        BackgroundColor="Lavender"
+                        CornerRadius="10"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        HeightRequest="60"
+                        WidthRequest="60"/>
+                    <Image HeightRequest="60"
+                           WidthRequest="60"
+                           Source="dob.png"/>
+                    <DatePicker Grid.Column="1"
+                                Date="{Binding Dob}"/>
+                </Grid>
+
+                <HorizontalStackLayout Spacing="50" Padding="5,40,5,0" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsNotInvisible}">
+                    <Button Text="Hủy"
+                            HorizontalOptions="CenterAndExpand"
+                            WidthRequest="100"
+                            Command="{Binding CancelCommand}"/>
+                    <Button Text="Tiếp tục"
+                            Command="{Binding Continue2Command}"
+                            HorizontalOptions="CenterAndExpand" WidthRequest="100"/>
+                </HorizontalStackLayout>
 
             </VerticalStackLayout>
         </Grid>

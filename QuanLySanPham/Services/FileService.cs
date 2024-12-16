@@ -1,4 +1,5 @@
 ﻿using Aspose.Cells;
+using Aspose.Tasks.Util;
 using CommunityToolkit.Maui.Storage;
 using QuanLySanPham.Model;
 using QuanLySanPham.View;
@@ -193,15 +194,13 @@ namespace QuanLySanPham.Services
                 worksheet.Cells[2, 1].PutValue("Ngày tạo:");
                 worksheet.Cells[2, 2].PutValue(ngayTao.ToString("dd/MM/yyyy"));
                 worksheet.Cells[3, 1].PutValue("Tổng giá trị ban đầu:");
-                worksheet.Cells[3, 2].PutValue(hoaDon.TongTien.ToString());
-                worksheet.Cells[3, 3].PutValue("Đơn vị: VNĐ");
+                worksheet.Cells[3, 2].PutValue($"{hoaDon.TongTien.ToString()} VND");
 
-                worksheet.Cells[4, 1].PutValue("Giảm giá(%):");
-                worksheet.Cells[4, 2].PutValue(hoaDon.GiamGia.ToString());
+                worksheet.Cells[4, 1].PutValue("Giảm giá:");
+                worksheet.Cells[4, 2].PutValue($"{hoaDon.GiamGia.ToString()} %");
 
                 worksheet.Cells[5, 1].PutValue("Tổng giá trị sau giảm:");
-                worksheet.Cells[5, 2].PutValue(hoaDon.TongTienSauGiam.ToString());
-                worksheet.Cells[5, 3].PutValue("Đơn vị: VNĐ");
+                worksheet.Cells[5, 2].PutValue($"{hoaDon.TongTienSauGiam.ToString()} VND");
 
                 worksheet.Cells[7, 0].PutValue("STT");
                 worksheet.Cells[7, 1].PutValue("Mã sản phẩm");
