@@ -199,8 +199,8 @@ namespace QuanLySanPham.Services
                 worksheet.Cells[4, 1].PutValue("Giảm giá(%):");
                 worksheet.Cells[4, 2].PutValue(hoaDon.GiamGia.ToString());
 
-                worksheet.Cells[5, 1].PutValue("Tổng giá trị ban đầu:");
-                worksheet.Cells[5, 2].PutValue(hoaDon.TongTien.ToString());
+                worksheet.Cells[5, 1].PutValue("Tổng giá trị sau giảm:");
+                worksheet.Cells[5, 2].PutValue(hoaDon.TongTienSauGiam.ToString());
                 worksheet.Cells[5, 3].PutValue("Đơn vị: VNĐ");
 
                 worksheet.Cells[7, 0].PutValue("STT");
